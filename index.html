@@ -491,7 +491,7 @@ const toggleGridBtn = document.getElementById('toggleGrid');
 const toggleEncounterBtn = document.getElementById('toggleEncounter'); 
 const toggleImpassableBtn = document.getElementById('toggleImpassable'); 
 const deleteAllEncountersBtn = document.getElementById('deleteAllEncounters');
-const deleteAllImpassableBtn = document.getElementById('deleteAllImpassable'); 
+const deleteAllImpassableBtn = document.getElementById('deleteAllImpassable');
 const logDisplay = document.getElementById('logDisplay');
 const chatInput = document.getElementById('chatInput');
 const sendChatBtn = document.getElementById('sendChatBtn');
@@ -760,11 +760,8 @@ async function loadMapDataFromFirestore(name) {
         addLogItem(`시스템: 맵 [${name}] 로드 완료.`, 'system');
         return true;
     } else {
-        if (name !== 'default' || mapNameInput.value !== 'default') {
-             // Only alert if it's not the initial 'default' load and the input isn't set to 'default'
-             alert(`맵 [${name}] 데이터가 없습니다.`);
-             addLogItem(`시스템: 맵 [${name}] 로드 실패. 데이터 없음.`, 'system');
-        }
+        // [수정된 부분]: 치명적인 오류 팝업(alert)을 제거하고 로그에만 기록합니다.
+        addLogItem(`시스템: 맵 [${name}] 데이터 로드 실패. (데이터 없음)`, 'system');
         return false;
     }
 }
@@ -1026,7 +1023,7 @@ function checkEncounter(){
                 saveMapDataToFirestore(currentMapName); 
                 addLogItem(`시스템: **${itemData?.name || encounter.encItemId}**를 발견하고 획득했습니다.`, 'item');
             } else {
-                 addLogItem(`시스템: 이곳은 이미 비어 있습니다.`, 'system');
+                 addLogItem(`시스템: **${itemData?.name || encounter.encItemId}**은(는) 이미 비어 있습니다.`, 'system');
             }
         }
         
@@ -1132,8 +1129,8 @@ function executeTrigger(trigger, data) {
         audio.play().catch(err => console.error("Sound play failed:", err));
     }
     else if(trigger==='map') {
-      if (data) loadMapDataFromFirestore(data).catch(err => alert('맵 전환 실패: '+err.message));
-      else alert('맵 트리거의 데이터가 없습니다.');
+      if (data) loadMapDataFromFirestore(data).catch(err => addLogItem('시스템: 맵 전환 실패. ' + err.message, 'system'));
+      else addLogItem('시스템: 맵 트리거의 데이터가 없습니다.', 'system');
     }
 }
 function fadeScreen(cb){
@@ -1270,17 +1267,17 @@ document.getElementById('loginBtn').onclick=()=>{
     signInWithEmailAndPassword(auth, ADMIN_EMAIL, pw).then(() => {
       document.getElementById('adminPw').value='';
       document.getElementById('loginBox').style.display='none';
-    }).catch(err => { alert('로그인 오류: ' + err.message + '\n(더미 비밀번호가 아닌 Firebase에 등록된 비밀번호를 사용해야 합니다.)'); });
+    }).catch(err => { addLogItem('관리자 로그인 오류: ' + err.message + '\n(더미 비밀번호가 아닌 Firebase에 등록된 비밀번호를 사용해야 합니다.)', 'system'); });
 };
 playerLoginBtnTop.onclick = () => {
     document.getElementById('playerLoginBox').style.display='flex';
 };
 document.getElementById('playerLoginBtnSubmit').onclick = async () => {
     const id = document.getElementById('playerIdInput').value.trim();
-    if (!id) { alert('아이디를 입력하세요.'); return; }
+    if (!id) { addLogItem('시스템: 아이디를 입력하세요.', 'system'); return; }
     
     const userSnap = await getDoc(doc(db, "users", id));
-    if (!userSnap.exists()) { alert('존재하지 않는 플레이어 아이디입니다.'); return; }
+    if (!userSnap.exists()) { addLogItem('시스템: 존재하지 않는 플레이어 아이디입니다.', 'system'); return; }
     
     // Player Login Success
     loggedInUserId = id;
@@ -1379,7 +1376,7 @@ document.getElementById('deleteAllImpassable').onclick = () => {
         saveMapDataToFirestore(currentMapName);
         redrawImpassableList();
         draw();
-        alert('모든 이동 제한 삭제 완료.');
+        addLogItem('관리자: 모든 이동 제한 삭제 완료.', 'system');
     }
 }
 
@@ -1626,17 +1623,24 @@ document.getElementById('addChoice').onclick=()=>{
     };
     c.appendChild(div);
 };
-/* --- 초기화 (FIXED: Robust map load) --- */
+/* --- 초기화 (FINAL FIX) --- */
+updateAdminButton(); // 버튼 작동 보장 1: 초기 관리자 버튼 바인딩
+playerLoginBtnTop.onclick = () => { // 버튼 작동 보장 2: 초기 플레이어 버튼 바인딩
+    document.getElementById('playerLoginBox').style.display='flex';
+};
+
+
 const initialMap = localStorage.getItem('currentMap') || 'default';
 loadMapDataFromFirestore(initialMap).then(loaded => {
     if (!loaded) {
-        // If initial load failed (e.g., 'default' map not in Firebase)
+        // If initial load failed, set to default placeholders gracefully
         mapNameInput.value = 'default';
         currentMapName = 'default';
         loadResources(); // Load default resources/placeholders
         addLogItem(`시스템: 맵 데이터가 없어 **[default]** 맵으로 초기화. 관리자 패널에서 맵을 생성/로드하세요.`, 'system');
     }
-    updateAdminButton();
+    
+    // UI updates run after async attempts
     redrawMapButtons();
     updateControlButtons(); 
     document.getElementById('startX').value = player.x;
@@ -1647,9 +1651,18 @@ loadMapDataFromFirestore(initialMap).then(loaded => {
     fetchAllUsers();
     fetchAllItems();
 }).catch(e => {
-    // General connection/Firebase error
-    console.error("Critical Initialization Error:", e);
-    alert(`치명적 오류 발생: ${e.message}. Firebase 설정 또는 인터넷 연결을 확인하세요.`);
+    // General connection/Firebase error - non-blocking console log and minor message
+    console.error("Critical Initialization Error (Non-blocking):", e);
+    addLogItem(`시스템: Firebase 초기 연결 실패. ${e.message}. (로그인 버튼은 작동합니다.)`, 'system');
+    
+    // Fallback UI draw to ensure screen isn't blank
+    mapNameInput.value = 'default';
+    loadResources();
+    draw();
+    
+    // Ensure all buttons are set if promise chain broke
+    redrawMapButtons();
+    updateControlButtons();
 });
 </script>
 </body>
