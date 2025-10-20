@@ -115,12 +115,55 @@
     z-index:15;background:var(--panel);padding:15px;border-radius:10px;
     font-size:14px;display:none;min-width:400px;max-width:400px;border:1px solid var(--accent);
     box-shadow:0 0 10px rgba(192,57,43,0.5);max-height: calc(100vh - 80px);overflow-y: auto;
+    transition: width 0.3s, height 0.3s, padding 0.3s, overflow 0.3s; /* for minimize transition */
   }
   /* Drag handle style */
   #adminPanel h4{
       margin:0 0 12px 0;text-align:center;color:var(--accent);border-bottom: 1px solid var(--border-dark);padding-bottom: 8px;
       cursor: grab; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
   }
+  /* Minimize button style */
+  #minimizeBtn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      padding: 0 5px;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.2s;
+      margin-left: 10px;
+  }
+  #minimizeBtn:hover { color: #fff; }
+
+  /* Minimized State */
+  #adminPanel.minimized {
+    width: 150px;
+    min-width: 150px;
+    height: auto; 
+    max-height: 50px;
+    padding: 10px 15px;
+    overflow: hidden;
+    right: 20px !important; /* Force to top-right when minimized */
+    left: auto !important;
+    top: 60px !important;
+  }
+  #adminPanel.minimized h4 {
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+  }
+  #adminPanel.minimized #minimizeBtn {
+      margin-left: 0;
+  }
+  #adminPanel.minimized .admin-tabs,
+  #adminPanel.minimized .admin-tab-content {
+    display: none !important;
+  }
+
   
   .admin-tabs { display: flex; margin-bottom: 15px; border-bottom: 1px solid var(--border-dark); }
   .admin-tabs button { flex: 1; padding: 10px 5px; background: var(--border-dark); border: none; border-radius: 4px 4px 0 0; color: var(--text-color); cursor: pointer; transition: background 0.2s; }
@@ -278,7 +321,10 @@
 </div>
 
 <div id="adminPanel">
-  <h4>관리자 패널</h4>
+  <h4>
+    <span>관리자 패널</span>
+    <button id="minimizeBtn" title="최소화/복원">[—]</button>
+  </h4>
   
   <div class="admin-tabs">
     <button id="mapTabBtn" class="active">맵 설정</button>
@@ -498,14 +544,22 @@ const sendChatBtn = document.getElementById('sendChatBtn');
 const chatNicknameInput = document.getElementById('chatNickname');
 const playerHPElement = document.getElementById('playerHP');
 const inventoryList = document.getElementById('inventoryList');
+const minimizeBtn = document.getElementById('minimizeBtn'); // NEW
 
-/* --- Admin Panel Dragging Logic --- */
+/* --- Admin Panel Dragging & Minimizing Logic --- */
 let isDraggingAdmin = false;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 
+function toggleMinimize() {
+    const isMinimized = adminPanel.classList.toggle('minimized');
+    minimizeBtn.textContent = isMinimized ? '[+]' : '[—]';
+    adminPanelHeader.style.cursor = isMinimized ? 'default' : 'grab';
+}
+minimizeBtn.onclick = toggleMinimize;
+
 adminPanelHeader.addEventListener('mousedown', (e) => {
-    if (adminMode && adminPanel.style.display !== 'none') {
+    if (adminMode && adminPanel.style.display !== 'none' && !adminPanel.classList.contains('minimized')) {
         isDraggingAdmin = true;
         const rect = adminPanel.getBoundingClientRect();
         dragOffsetX = e.clientX - rect.left;
@@ -516,7 +570,7 @@ adminPanelHeader.addEventListener('mousedown', (e) => {
     }
 });
 document.addEventListener('mousemove', (e) => {
-    if (isDraggingAdmin) {
+    if (isDraggingAdmin && !adminPanel.classList.contains('minimized')) {
         e.preventDefault(); 
         let newX = e.clientX - dragOffsetX;
         let newY = e.clientY - dragOffsetY;
@@ -530,7 +584,9 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('mouseup', () => {
     if (isDraggingAdmin) {
         isDraggingAdmin = false;
-        adminPanelHeader.style.cursor = 'grab';
+        if (!adminPanel.classList.contains('minimized')) {
+             adminPanelHeader.style.cursor = 'grab';
+        }
     }
 });
 
@@ -638,7 +694,7 @@ async function deleteChatMessage(docId) {
     if (!adminMode || !docId) return;
     if (confirm('이 채팅 메시지를 삭제하시겠습니까?')) {
         await deleteDoc(doc(db, "chats", docId));
-        addLogItem(`관리자: 채팅 메시지 (${docId.substring(0, 5)}...) 삭제 완료.`, 'system');
+        console.log(`[Admin Log] 채팅 메시지 (${docId.substring(0, 5)}...) 삭제 완료.`);
     }
 }
 function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
@@ -674,7 +730,7 @@ async function updatePlayerHp(userId, newHp) {
         myHP = newHp;
         updateStatusPanel();
     }
-    addLogItem(`관리자: 플레이어 [${userId}]의 HP를 ${newHp}로 설정.`, 'system');
+    console.log(`[Admin Log] 플레이어 [${userId}]의 HP를 ${newHp}로 설정.`);
 }
 
 async function updatePlayerStatus(userId, newHp) {
@@ -683,7 +739,7 @@ async function updatePlayerStatus(userId, newHp) {
         myHP = newHp;
         updateStatusPanel();
     }
-    addLogItem(`관리자: 플레이어 [${userId}]의 상태(HP) 업데이트 완료.`, 'system');
+    console.log(`[Admin Log] 플레이어 [${userId}]의 상태(HP) 업데이트 완료.`);
 }
 
 async function addItemDefinition(id, name, imageUrl, description) {
@@ -694,7 +750,7 @@ async function addItemDefinition(id, name, imageUrl, description) {
         name, imageUrl, description
     });
     await fetchAllItems();
-    addLogItem(`관리자: 아이템 [${name}] 등록 완료.`, 'system');
+    console.log(`[Admin Log] 아이템 [${name}] 등록 완료.`);
 }
 
 
@@ -730,7 +786,7 @@ async function saveMapDataToFirestore(name) {
     }
 
     redrawMapButtons();
-    addLogItem(`관리자: 맵 [${name}] 저장 완료.`, 'system');
+    console.log(`[Admin Log] 맵 [${name}] 저장 완료.`);
 }
 
 async function loadMapDataFromFirestore(name) {
@@ -962,7 +1018,7 @@ async function deletePlayer(id) {
     if (confirm(`플레이어 ${id}를 삭제하시겠습니까?`)) {
         await deleteDoc(doc(db, "users", id));
         await fetchAllUsers();
-        addLogItem(`관리자: 플레이어 [${id}] 삭제 완료.`, 'system');
+        console.log(`[Admin Log] 플레이어 [${id}] 삭제 완료.`);
     }
 }
 
@@ -970,7 +1026,7 @@ async function deleteItemDefinition(id) {
      if (confirm(`아이템 ${id}를 삭제하시겠습니까?`)) {
         await deleteDoc(doc(db, "items", id));
         await fetchAllItems();
-        addLogItem(`관리자: 아이템 정의 [${id}] 삭제 완료.`, 'system');
+        console.log(`[Admin Log] 아이템 정의 [${id}] 삭제 완료.`);
     }
 }
 
@@ -1023,7 +1079,7 @@ function checkEncounter(){
                 saveMapDataToFirestore(currentMapName); 
                 addLogItem(`시스템: **${itemData?.name || encounter.encItemId}**를 발견하고 획득했습니다.`, 'item');
             } else {
-                 addLogItem(`시스템: **${itemData?.name || encounter.encItemId}**은(는) 이미 비어 있습니다.`, 'system');
+                 addLogItem(`시스템: **${itemData?.name || encounter.encItemId}**은(는) 이미 가지고 있습니다.`, 'system');
             }
         }
         
@@ -1247,6 +1303,7 @@ function logoutAdmin(){
     signOut(auth).then(() => {
         adminMode = false;
         updateAdminButton();
+        document.getElementById('adminPanel').style.display = 'none'; // Ensure panel hides on logout
         if (!playerMode) {
             // If player is also logged out, force playerMode to false
             playerMode = false;
@@ -1366,7 +1423,7 @@ deleteAllEncountersBtn.onclick = () => {
         saveMapDataToFirestore(currentMapName); // Save to firestore to update
         redrawEncList();
         draw();
-        addLogItem('관리자: 모든 조우 삭제 완료.', 'system');
+        console.log('[Admin Log] 모든 조우 삭제 완료.');
     }
 };
 
@@ -1376,7 +1433,7 @@ document.getElementById('deleteAllImpassable').onclick = () => {
         saveMapDataToFirestore(currentMapName);
         redrawImpassableList();
         draw();
-        addLogItem('관리자: 모든 이동 제한 삭제 완료.', 'system');
+        console.log('[Admin Log] 모든 이동 제한 삭제 완료.');
     }
 }
 
@@ -1387,29 +1444,36 @@ document.getElementById('setPlayerPos').onclick = () => {
         updateDoc(doc(db, "users", loggedInUserId), {x: player.x, y: player.y}).catch(console.error);
     }
     draw();
-    addLogItem(`관리자: 플레이어 위치 [${player.x}, ${player.y}]로 설정.`, 'system');
+    console.log(`[Admin Log] 플레이어 위치 [${player.x}, ${player.y}]로 설정.`);
 };
 
 document.getElementById('addPlayerBtn').onclick = async () => {
     const id = document.getElementById('newUserId').value.trim();
     const charUrl = document.getElementById('newUserCharUrl').value.trim();
     
-    if (!id) return alert('ID를 입력하세요.');
-    if (allUsers[id]) return alert('이미 존재하는 ID입니다.');
+    if (!id) { alert('ID를 입력하세요.'); return; }
+    if (allUsers[id]) { alert('이미 존재하는 ID입니다.'); return; }
 
-    const userData = {
-        charUrl: charUrl || spriteUrlInput.value,
-        hp: 100,
-        inventory: [],
-        map: currentMapName || 'default',
-        x: player.x,
-        y: player.y
-    };
-    await setDoc(doc(db, "users", id), userData);
-    await fetchAllUsers();
-    addLogItem(`관리자: 플레이어 [${id}] 생성 완료.`, 'system');
-    document.getElementById('newUserId').value = '';
-    document.getElementById('newUserCharUrl').value = '';
+    try {
+        const userData = {
+            charUrl: charUrl || spriteUrlInput.value,
+            hp: 100,
+            inventory: [],
+            map: currentMapName || 'default',
+            x: player.x,
+            y: player.y
+        };
+        await setDoc(doc(db, "users", id), userData);
+        await fetchAllUsers();
+        console.log(`[Admin Log] 플레이어 [${id}] 생성 완료.`);
+        document.getElementById('newUserId').value = '';
+        document.getElementById('newUserCharUrl').value = '';
+        alert(`플레이어 [${id}] 생성 성공!`);
+
+    } catch (e) {
+        console.error("플레이어 생성 오류:", e);
+        alert(`플레이어 생성 실패: ${e.message}\n(Firebase Firestore 규칙 및 연결 상태를 확인하십시오.)`);
+    }
 };
 
 document.getElementById('addItemBtn').onclick = () => {
