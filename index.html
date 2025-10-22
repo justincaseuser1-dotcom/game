@@ -141,10 +141,32 @@
   .item-desc { font-size: 12px; color: #aaa; }
 
   /* Admin Info Content */
-  #adminRightInfo { padding: 5px; flex-grow: 1; font-size: 14px; }
-  #adminRightInfo h4 { margin-top: 0; border-bottom: 1px solid var(--border-dark); padding-bottom: 8px; color: var(--accent); }
-  #adminRightInfo p { margin-bottom: 8px; line-height: 1.5; }
-  #adminRightInfo strong { color: #eee; font-weight: 700; }
+  /* **[수정]** 관리자 정보 UI를 가로 배열로 변경 */
+  #adminRightInfo { 
+      padding: 5px; 
+      flex-grow: 1; 
+      font-size: 14px; 
+      display: flex;
+      flex-wrap: wrap; 
+      gap: 10px 20px; 
+      justify-content: flex-start;
+  }
+  #adminRightInfo h4 { 
+      width: 100%; /* Title takes full width */
+      margin-top: 0; 
+      border-bottom: 1px solid var(--border-dark); 
+      padding-bottom: 8px; 
+      color: var(--accent); 
+  }
+  #adminRightInfo p { 
+      margin-bottom: 0; 
+      line-height: 1.5;
+      flex-shrink: 0; 
+  }
+  #adminRightInfo hr {
+      width: 100%;
+      margin: 15px 0;
+  }
   
   #container{
     order: 2; 
@@ -451,23 +473,6 @@
       background: #550000; border-color: #770000; padding: 4px 8px; font-size: 11px;
       transition: opacity 0.2s;
   }
-
-  /* Daily Log Modal */
-  #dailyLogModal .modal { 
-      min-width: 550px; 
-      max-height: 90vh; 
-      overflow-y: auto; 
-  }
-  #dailyLogsList .list-item { 
-      flex-direction: column; 
-      align-items: flex-start;
-      padding: 5px 0;
-  }
-  #dailyLogsList .list-item span {
-      width: 100%; 
-      word-break: break-all;
-  }
-
 </style>
 </head>
 <body>
@@ -485,8 +490,8 @@
 
 <div id="logChatPanel" class="side-panel">
     <div class="chat-controls">
-        <button id="logToggleBtn" title="일별 기록 열람">
-            📅
+        <button id="logToggleBtn" title="전체 채팅 기록 보기">
+            🔗
         </button>
         <button id="deleteAllChatBtn" title="채팅 전체삭제" style="background: #880000; border-color: #aa0000; display: none;">
             🗑️
@@ -526,7 +531,7 @@
         <p><strong>총 조우 수:</strong> <span id="adminInfoEncCount">0</span></p>
         <p><strong>제한 구역 수:</strong> <span id="adminInfoImpCount">0</span></p>
         <hr>
-        <p style="font-size: 13px; color: #aaa;">맵 설정, 사용자 관리 등은 오른쪽 상단의 **관리자 패널**을 이용하세요.</p>
+        <p style="font-size: 13px; color: #aaa; width: 100%;">맵 설정, 사용자 관리 등은 오른쪽 상단의 **관리자 패널**을 이용하세요.</p>
     </div>
 </div>
 
@@ -726,23 +731,6 @@
     </div>
 </div>
 
-<div class="modal-bg" id="dailyLogModal" style="display: none;">
-    <div class="modal">
-        <h4>일별 기록 열람</h4>
-        <div class="row">
-            <input type="date" id="logDateInput" style="flex-grow: 1;">
-            <button id="loadLogsBtn">기록 불러오기</button>
-        </div>
-        <div class="list-container" id="dailyLogsList" style="max-height: 400px; min-height: 100px;">
-            <div style="text-align: center; color: #aaa; padding: 10px;">날짜를 선택하고 기록을 불러오세요.</div>
-        </div>
-        <div style="margin-top:10px;text-align:right">
-            <button id="closeDailyLogModal">닫기</button>
-        </div>
-    </div>
-</div>
-
-
 <script type="module">
 /* Firebase + 앱 로직 통합 */
 
@@ -842,8 +830,7 @@ const itemUseModalBg = document.getElementById('itemUseModalBg');
 const useItemBtn = document.getElementById('useItemBtn');
 const closeItemUseModalBtn = document.getElementById('closeItemUseModal');
 const inventoryModal = document.getElementById('inventoryModal');
-const dailyLogModal = document.getElementById('dailyLogModal');
-const dailyLogsList = document.getElementById('dailyLogsList');
+// **[제거]** dailyLogModal 관련 UI 바인딩 제거 
 
 // Player UI
 const inventoryList = document.getElementById('inventoryList');
@@ -1193,6 +1180,13 @@ async function handleAdminLogin() {
     }
 }
 
+// **[추가]** 채팅 접근 권한 업데이트 함수
+function updateChatAccess() {
+    const isAccessible = playerMode || adminMode;
+    chatInput.disabled = !isAccessible;
+    sendChatBtn.disabled = !isAccessible;
+}
+
 function updateAdminUI(state) {
     adminMode = state;
     document.getElementById('adminBtn').textContent = state ? '관리자 로그아웃' : '관리자';
@@ -1207,12 +1201,15 @@ function updateAdminUI(state) {
         fetchAllUsers(true);
         fetchAllItems(true);
         updateControlButtons();
+        // **[수정]** 맵 변경 없이 로그인 시 리스너 재실행
+        startChatListener();
     } else {
         isEncounterMode = false;
         isImpassableMode = false;
         updateControlButtons();
         if (!playerMode) document.getElementById('statusInventoryPanel').style.display = 'none';
     }
+    updateChatAccess(); // **[추가]**
     draw();
 }
 
@@ -1221,8 +1218,7 @@ function updatePlayerUI(state) {
     document.getElementById('playerLoginBtnTop').textContent = state ? `${loggedInUserId} (로그아웃)` : '플레이어 로그인';
     document.getElementById('playerContent').style.display = state ? 'flex' : 'none';
 
-    chatInput.disabled = !state;
-    sendChatBtn.disabled = !state;
+    // **[수정]** 채팅 접근은 updateChatAccess()에서 처리
     
     if (state) {
         document.getElementById('logChatPanel').style.display = 'flex';
@@ -1233,6 +1229,7 @@ function updatePlayerUI(state) {
              document.getElementById('statusInventoryPanel').style.display = 'none';
         }
     }
+    updateChatAccess(); // **[추가]**
 }
 
 async function sendChat() {
@@ -1245,7 +1242,8 @@ async function sendChat() {
         nickname: nickname,
         message: text,
         timestamp: serverTimestamp(),
-        is_admin: adminMode
+        is_admin: adminMode,
+        map_name: currentMapName // **[추가]** 맵 한정 채팅을 위한 필드
     });
     chatInput.value = '';
 }
@@ -1253,16 +1251,47 @@ async function sendChat() {
 function startChatListener() {
     if (chatUnsub) chatUnsub(); 
     
-    const q = query(collection(db, 'chats'), orderBy('timestamp', 'desc'), limit(50));
+    // **[수정]** 현재 맵 이름으로 필터링
+    const q = query(
+        collection(db, 'chats'), 
+        where('map_name', '==', currentMapName), // NEW: Map filter
+        orderBy('timestamp', 'desc'), // 최신순 50개 제한
+        limit(50)
+    );
     
     chatUnsub = onSnapshot(q, (snapshot) => {
         // Clear previous chat items, but keep system logs
-        document.querySelectorAll('#logDisplay .chat-item').forEach(e => {
-            if (!e.classList.contains('system')) e.remove();
-        });
+        document.querySelectorAll('#logDisplay .chat-item').forEach(e => e.remove());
         
-        snapshot.docs.slice().reverse().forEach(doc => {
+        let lastDate = null; // Variable to track date change
+
+        // Reverse the docs so they appear in chronological order (oldest first)
+        const sortedDocs = snapshot.docs.slice().reverse(); 
+        
+        sortedDocs.forEach(doc => {
             const data = doc.data();
+            
+            // **[추가]** 날짜 구분선 로직 (오전 12시 기준)
+            if (data.timestamp) {
+                const docDate = data.timestamp.toDate();
+                // Get date key: YYYYMMDD
+                const currentDateKey = docDate.getFullYear() * 10000 + (docDate.getMonth() + 1) * 100 + docDate.getDate();
+                
+                if (currentDateKey !== lastDate) {
+                    const dateText = `${docDate.getFullYear()}. ${docDate.getMonth() + 1}. ${docDate.getDate()}.`;
+                    const dateSeparator = document.createElement('div');
+                    dateSeparator.className = 'log-item system';
+                    dateSeparator.style.textAlign = 'center';
+                    dateSeparator.style.borderTop = '1px solid #444';
+                    dateSeparator.style.marginTop = '5px';
+                    dateSeparator.style.paddingTop = '5px';
+                    dateSeparator.innerHTML = `--- ${dateText} ---`;
+                    logDisplay.appendChild(dateSeparator);
+                    lastDate = currentDateKey;
+                }
+            }
+            // **[추가]** 날짜 구분선 로직 끝
+
             const logItem = document.createElement('div');
             logItem.className = 'chat-item ' + (data.is_admin ? 'admin' : '');
             
@@ -1287,48 +1316,6 @@ window.deleteChat = async (chatId) => {
     addLogItem('시스템: 채팅 기록이 삭제되었습니다.', 'system');
 };
 
-async function loadDailyLogs(date) {
-    if (!date) return;
-
-    dailyLogsList.innerHTML = `<div style="text-align: center; color: #aaa; padding: 10px;">기록 불러오는 중...</div>`;
-
-    const startDate = new Date(date);
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(date);
-    endDate.setDate(endDate.getDate() + 1);
-    endDate.setHours(0, 0, 0, 0);
-
-    const q = query(
-        collection(db, 'chats'), 
-        where('timestamp', '>=', startDate), 
-        where('timestamp', '<', endDate),
-        orderBy('timestamp', 'asc')
-    );
-    
-    const snapshot = await getDocs(q);
-    
-    dailyLogsList.innerHTML = '';
-
-    if (snapshot.empty) {
-        dailyLogsList.innerHTML = `<div style="text-align: center; color: #aaa; padding: 10px;">해당 날짜의 기록이 없습니다.</div>`;
-        return;
-    }
-
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        const item = document.createElement('div');
-        item.className = 'list-item';
-        
-        const timestamp = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString('ko-KR') : '시간 없음';
-        const type = data.is_admin ? ' (관리자)' : '';
-        
-        item.innerHTML = `
-            <span>[${timestamp}] <strong>${data.nickname}${type}:</strong></span>
-            <span>${data.message}</span>
-        `;
-        dailyLogsList.appendChild(item);
-    });
-}
 
 // Map Functions (Required for Admin/Player Login)
 async function loadMapDataFromFirestore(mapName, customX = null, customY = null) {
@@ -1367,8 +1354,10 @@ async function loadMapDataFromFirestore(mapName, customX = null, customY = null)
         await loadResources();
         mapLoaded = true;
         
-        if (playerMode) {
+        if (playerMode || adminMode) { // Check if someone is logged in
             updatePlayerStatusInFirestore(); 
+            startChatListener(); // **[수정]** 맵 변경 시 채팅 리스너 재실행
+            updateChatAccess();
         }
 
         updateControlButtons();
@@ -2023,21 +2012,17 @@ function initEventListeners() {
             const chats = await getDocs(collection(db, 'chats'));
             chats.forEach(doc => deleteDoc(doc.ref));
             addLogItem('시스템: 모든 채팅 기록이 삭제되었습니다.', 'system');
+            // 리스너 재실행
+            startChatListener();
         }
     });
 
-    // Daily Logs
+    // **[수정]** 일별 기록 대신 전체 기록 외부 링크
     document.getElementById('logToggleBtn').addEventListener('click', () => {
-        document.getElementById('dailyLogModal').style.display = 'flex';
-        document.getElementById('logDateInput').valueAsDate = new Date();
-        dailyLogsList.innerHTML = `<div style="text-align: center; color: #aaa; padding: 10px;">날짜를 선택하고 기록을 불러오세요.</div>`;
-    });
-    document.getElementById('closeDailyLogModal').addEventListener('click', () => {
-        document.getElementById('dailyLogModal').style.display = 'none';
-    });
-    document.getElementById('loadLogsBtn').addEventListener('click', () => {
-        const date = document.getElementById('logDateInput').value;
-        if (date) loadDailyLogs(date); else alert('날짜를 선택해주세요.');
+        // 이 URL은 실제 채팅 기록 아카이브 URL로 변경해야 합니다.
+        const archiveUrl = 'https://docs.google.com/document/d/YOUR_EXTERNAL_CHAT_ARCHIVE_LINK'; 
+        window.open(archiveUrl, '_blank');
+        addLogItem('시스템: 전체 채팅 기록을 새 창에서 엽니다.', 'system');
     });
 
     // Player Map/Pos Update (Admin)
@@ -2196,7 +2181,7 @@ window.deleteAllEnc = async () => {
         encounterPoints = [];
         updateControlButtons();
         draw();
-        await saveMapDataToFirestore();
+        await saveMapDataFromFirestore();
         addLogItem('시스템: 모든 조우 구역이 삭제되었습니다.', 'system');
     }
 };
@@ -2305,7 +2290,7 @@ window.removeAdminItem = async (playerId, itemId) => {
 
 // Initialization Sequence
 initEventListeners(); 
-startChatListener();
+// **[수정]** startChatListener는 loadMapDataFromFirestore에서 호출됨.
 
 onAuthStateChanged(auth, (user) => {
     if (user && user.email === ADMIN_EMAIL) {
@@ -2341,6 +2326,7 @@ Promise.all([
 
     const savedPlayerId = localStorage.getItem('loggedInPlayerId'); 
     if (savedPlayerId) {
+        // 이미 loadMapDataFromFirestore에서 startChatListener가 호출되었으므로, 여기서 다시 호출할 필요는 없음.
         loginAsPlayer(savedPlayerId); 
     } else {
         updatePlayerUI(false);
