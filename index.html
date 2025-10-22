@@ -2645,6 +2645,7 @@ onAuthStateChanged(auth, (user) => {
     if (user && user.email === ADMIN_EMAIL) {
         updateAdminUI(true);
         addLogItem(`시스템: 관리자 (${user.email}) 로그인 성공.`, 'system');
+        window.isAdminLoggedIn = true;
         
         // Start admin chat listener
         if (!chatUnsub) startChatListener();
@@ -2677,7 +2678,8 @@ Promise.all([
     startXInput.value = player.x;
     startYInput.value = player.y; 
     draw();
-
+  
+  if (!window.isAdminLoggedIn) {
     const savedPlayerId = localStorage.getItem('loggedInUserId');
     if (savedPlayerId) {
         // Attempt to auto-login as player
@@ -2685,6 +2687,7 @@ Promise.all([
             console.warn("Player auto-login failed. Waiting for manual login.");
         });
     }
+  }
 
     // Load saved volume
     const savedVolume = localStorage.getItem('bgmVolume');
