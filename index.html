@@ -51,7 +51,7 @@
   #logChatPanel { order: 1; display: none; }
   #logDisplay {
     flex-grow: 1;
-    overflow-y: auto; /* P1: 스크롤 적용 */
+    overflow-y: auto;
     background: var(--input-bg);
     padding: 8px;
     margin-bottom: 10px;
@@ -59,7 +59,6 @@
     border: 1px solid var(--border-dark);
   }
   .log-item, .chat-item { font-size: 13px; line-height: 1.4; padding: 2px 0; border-bottom: 1px dotted rgba(255,255,255,0.05); }
-  .log-item:last-child, .chat-item:last-child { border-bottom: none; }
   .log-item.system { color: #f1c40f; }
   .log-item.item { color: #2ecc71; }
   .chat-item.admin { color: #f1c40f; font-weight: bold; } 
@@ -70,7 +69,7 @@
   /* Log/Chat Panel UI & Layout Fixes */
   .chat-controls { 
       display: flex; 
-      justify-content: flex-end; /* D1: 전체 채팅 기록 보기 버튼 삭제로 정렬 변경 */
+      justify-content: space-between; 
       align-items: center; 
       margin-bottom: 5px;
       gap: 5px; 
@@ -87,6 +86,10 @@
       line-height: 1;
       flex-shrink: 0;
   }
+  #logToggleBtn { 
+      font-size: 18px; 
+      margin-right: 5px; 
+  } 
 
   .chat-controls > div {
       display: flex; 
@@ -116,37 +119,10 @@
       margin-bottom: 10px;
   }
   #playerHP { font-size: 16px; font-weight: bold; color: var(--accent); }
-  
-  /* P2: 플레이어 모드에서 현재 맵 플레이어 목록 스타일 */
-  #playerMapPlayers { 
-      padding: 5px; 
-      margin-bottom: 10px; 
-      border-top: 1px solid var(--border-dark); 
-  }
-  #playerMapPlayerList {
-      max-height: 100px; 
-      overflow-y: auto; /* P1: 플레이어 모드 플레이어 목록 스크롤 */
-      padding: 5px;
-      background: var(--input-bg);
-      border-radius: 4px;
-      border: 1px solid var(--border-dark);
-  }
-  /* P2/재활용: 플레이어 목록 아이템 스타일 */
-  .player-on-map-item {
-      padding: 5px 0;
-      border-bottom: 1px dashed rgba(255,255,255,0.1);
-      line-height: 1.4;
-  }
-  .player-on-map-item:last-child { border-bottom: none; }
-  .player-on-map-item strong { color: #5dade2; } 
-  .player-on-map-item small { display: block; color: #aaa; font-size: 11px; margin-left: 5px; }
-
-  /* P1: 인벤토리 스크롤 */
   #inventoryList {
       flex-grow: 1;
-      overflow-y: auto; /* P1: 스크롤 적용 */
+      overflow-y: auto;
       padding: 5px;
-      min-height: 100px; /* 스크롤 영역 확보 */
   }
   .inventory-item { 
       display: flex;
@@ -172,7 +148,6 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      overflow-y: auto; /* P1: 관리자 정보창 스크롤 */
   }
   #adminRightInfo h4 { 
       width: 100%; 
@@ -192,14 +167,21 @@
   }
   #playerOnMapList {
       flex-grow: 1;
-      overflow-y: auto; /* P1: 관리자 모드 플레이어 목록 스크롤 */
+      overflow-y: auto;
       margin-top: 5px;
       padding: 5px;
       background: var(--input-bg);
       border-radius: 4px;
       border: 1px solid var(--border-dark);
   }
-  /* .player-on-map-item 스타일은 위에서 재활용 */
+  .player-on-map-item {
+      padding: 5px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      line-height: 1.4;
+  }
+  .player-on-map-item:last-child { border-bottom: none; }
+  .player-on-map-item strong { color: #5dade2; } 
+  .player-on-map-item small { display: block; color: #aaa; font-size: 11px; margin-left: 5px; }
   
   #container{
     order: 2; 
@@ -222,7 +204,7 @@
   }
 
   /* --- 스크롤바 디자인 통일 --- */
-  #adminPanel, #editModal .modal, #choices, #logDisplay, #inventoryList, #playerMapPlayerList, #playerOnMapList, #adminRightInfo { /* P1: adminRightInfo, playerMapPlayerList 추가 */
+  #adminPanel, #editModal .modal, #choices, #logDisplay, #inventoryList { 
       scrollbar-width: thin; 
       scrollbar-color: var(--accent) rgba(0,0,0,0.2); 
   }
@@ -230,20 +212,14 @@
   #editModal .modal::-webkit-scrollbar, 
   #choices::-webkit-scrollbar, 
   #logDisplay::-webkit-scrollbar,
-  #inventoryList::-webkit-scrollbar,
-  #playerMapPlayerList::-webkit-scrollbar,
-  #playerOnMapList::-webkit-scrollbar,
-  #adminRightInfo::-webkit-scrollbar { /* P1: adminRightInfo, playerMapPlayerList 추가 */
+  #inventoryList::-webkit-scrollbar { 
       width: 8px; 
   }
   #adminPanel::-webkit-scrollbar-thumb, 
   #editModal .modal::-webkit-scrollbar-thumb, 
   #choices::-webkit-scrollbar-thumb, 
   #logDisplay::-webkit-scrollbar-thumb,
-  #inventoryList::-webkit-scrollbar-thumb,
-  #playerMapPlayerList::-webkit-scrollbar-thumb,
-  #playerOnMapList::-webkit-scrollbar-thumb,
-  #adminRightInfo::-webkit-scrollbar-thumb { /* P1: adminRightInfo, playerMapPlayerList 추가 */
+  #inventoryList::-webkit-scrollbar-thumb { 
       background-color: var(--accent); 
       border-radius: 4px; 
       visibility: hidden; 
@@ -252,20 +228,14 @@
   #editModal .modal:hover::-webkit-scrollbar-thumb, 
   #choices:hover::-webkit-scrollbar-thumb, 
   #logDisplay:hover::-webkit-scrollbar-thumb,
-  #inventoryList:hover::-webkit-scrollbar-thumb,
-  #playerMapPlayerList:hover::-webkit-scrollbar-thumb,
-  #playerOnMapList:hover::-webkit-scrollbar-thumb,
-  #adminRightInfo:hover::-webkit-scrollbar-thumb { /* P1: adminRightInfo, playerMapPlayerList 추가 */
+  #inventoryList:hover::-webkit-scrollbar-thumb { 
       visibility: visible; 
   }
   #adminPanel::-webkit-scrollbar-track,
   #editModal .modal::-webkit-scrollbar-track,
   #choices::-webkit-scrollbar-track,
   #logDisplay::-webkit-scrollbar-track,
-  #inventoryList::-webkit-scrollbar-track,
-  #playerMapPlayerList::-webkit-scrollbar-track,
-  #playerOnMapList::-webkit-scrollbar-track,
-  #adminRightInfo::-webkit-scrollbar-track { /* P1: adminRightInfo, playerMapPlayerList 추가 */
+  #inventoryList::-webkit-scrollbar-track { 
       background: rgba(0,0,0,0.2); 
   }
   /* --- 스크롤바 끝 --- */
@@ -359,7 +329,7 @@
   #adminPanel > .row:first-of-type #saveMap {flex-grow: 1;width: auto;flex-shrink: 1;}
   #mapButtons {display: block !important;}
   
-  /* [2. 조우/제한 전체 삭제 버튼 크기 통일 및 정렬] - 버튼 삭제로 불필요 */
+  /* [2. 조우/제한 전체 삭제 버튼 크기 통일 및 정렬] */
   #mapButtons > div {display: flex;gap: 10px;margin-bottom: 5px;width: 100%;}
   #mapButtons > div button {
       flex-grow: 1; 
@@ -430,7 +400,6 @@
   .list-item input[type=text], .list-item input[type=number] { margin: 0; padding: 4px; height: auto; font-size: 12px; }
 
   /* Modal Styles */
-  /* P3: 모든 팝업을 내부 팝업 형식으로 유지하기 위해 modal-bg 스타일 유지 (전체 화면이 아닌 중앙 모달) */
   .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:30;}
   .modal{background:#111;padding:15px;border-radius:10px;min-width:450px;max-width: 600px; width: auto;color:var(--text-color);box-sizing:border-box;border:2px solid var(--accent);box-shadow: 0 0 15px rgba(192, 57, 43, 0.7);}
   
@@ -451,7 +420,7 @@
       border-radius: 4px; 
       max-height: 200px; 
       min-height: 40px; 
-      overflow-y: auto; /* P3: 선택지 정보 화면 내부 스크롤 적용 */
+      overflow-y: auto; 
       background: rgba(255, 255, 255, 0.03); 
       box-sizing: border-box; 
       margin-top: 5px;
@@ -482,14 +451,7 @@
 
   #addChoiceContainer { text-align: right; margin-top: 10px; margin-bottom: 5px; }
   .modal > div:last-child { margin-top: 10px !important; }
-  
-  /* P3: 조우 팝업 (encounterModal)도 같은 내부 팝업 스타일 유지 */
-  #encounterModalBg .modal {
-      min-width: 500px;
-      padding: 20px;
-      max-height: 90vh;
-      overflow-y: auto; /* P3: 조우 팝업 내용 길어지면 스크롤 적용 */
-  }
+  #encounterModal {min-width: 500px;padding: 20px;}
   #encounterModal h4 {color: #fff;border-color: var(--accent);}
   #encounterModal .info-text { white-space: pre-wrap;background: rgba(255,255,255,0.05);padding: 10px;border-radius: 5px;margin-bottom: 15px;border: 1px solid var(--border-dark);font-style: italic; }
   #encounterChoices button {display: block;width: 100%;margin-top: 10px;background: #444;}
@@ -497,41 +459,28 @@
   .char-img-container { display: flex;justify-content: center;margin-bottom: 15px;height: 250px;width: 100%;overflow: hidden; }
   .char-img-container img { max-width: 100%; height: 100%; width: 100%; object-fit: cover; border-radius: 5px; box-shadow: 0 0 10px rgba(192, 57, 43, 0.5); }
 
-  /* Item Use Modal **[P4: 수정]** 버튼 하단 정렬 및 Vertical */
+  /* Item Use Modal **[수정]** 버튼 하단 정렬 */
   #itemUseModal .modal { 
       min-width: 350px; 
       display: flex; 
-      flex-direction: column; /* P4: Vertical 레이아웃 */
-      max-height: 80vh; 
+      flex-direction: column; 
   }
   #itemUseModal h4 { border-bottom: none; }
   #itemUseModal .item-image { width: 80px; height: 80px; margin: 10px auto; display: block; }
   #itemUseModal .item-desc { 
       text-align: center; 
       margin-bottom: 10px; 
-      flex-grow: 1; /* P4: 내용을 위로 밀어내고 버튼을 하단에 고정 */
-      overflow-y: auto; /* P4: 아이템 설명 길어지면 스크롤 */
+      flex-grow: 1; 
   }
   #itemUseModal .modal > div:last-child {
       padding-top: 10px; 
       border-top: 1px solid var(--border-dark); 
       margin-top: 0;
-      display: flex; 
-      justify-content: space-between; /* P4: 버튼 좌 / 우 배치 */
+      display: flex; /* **[추가]** */
+      justify-content: flex-end; /* **[추가]** */
       gap: 10px;
   }
-  #itemUseModal .modal > div:last-child button {
-      flex-grow: 1; /* P4: 버튼이 공간을 채우도록 */
-  }
-  #useItemBtn {
-      background: #2ecc71 !important;
-      border-color: #27ae60 !important;
-  }
-  #closeItemUseModal {
-      background: var(--border-dark) !important;
-      border-color: var(--border-light) !important;
-  }
-  
+
   /* Inventory Modal */
   #inventoryModal .modal { min-width: 300px; max-height: 80vh; overflow-y: auto; }
   .inventory-admin-item { 
@@ -559,6 +508,9 @@
 
 <div id="logChatPanel" class="side-panel">
     <div class="chat-controls">
+        <button id="logToggleBtn" title="전체 채팅 기록 보기">
+            🔗
+        </button>
         <button id="deleteAllChatBtn" title="채팅 전체삭제" style="background: #880000; border-color: #aa0000; display: none;">
             🗑️
         </button> 
@@ -587,14 +539,6 @@
         <div id="playerStatus">
             HP: <span id="playerHP">100</span>
         </div>
-        
-        <div id="playerMapPlayers">
-            <p style="margin-bottom: 5px;"><strong>현재 맵 플레이어:</strong></p>
-            <div id="playerMapPlayerList">
-                <div style="text-align: center; color: #aaa; font-size: 13px;">다른 플레이어 없음</div>
-            </div>
-        </div>
-
         <h4>인벤토리</h4>
         <div id="inventoryList">
         </div>
@@ -655,10 +599,12 @@
     
     <div id="mapButtons" style="margin-top:10px;">
         <div class="row"> 
-            </div>
+            <button id="deleteAllEncBtn" style="background: #880000; border-color: #aa0000;">조우 전체 삭제</button>
+            <button id="deleteAllImpBtn" style="background: #880000; border-color: #aa0000;">제한 전체 삭제</button>
+        </div>
         <hr style="margin: 10px 0;">
         <div class="row"> 
-            <button id="deleteAndInitMapBtn" style="background: #e74c3c; border-color: #c0392b;">맵 초기화</button>
+            <button id="deleteAndInitMapBtn" style="background: #e74c3c; border-color: #c0392b;">현재 맵 삭제 및 초기화</button>
         </div>
     </div>
 
@@ -742,10 +688,13 @@
     <select id="encItemIdSelect" style="margin-bottom: 5px;"></select>
     <input id="encItemIdManual" type="text" placeholder="직접 입력 또는 새로운 아이템 ID" style="display:none;">
     <input type="checkbox" id="encItemIdManualCheck"><label for="encItemIdManualCheck" style="display: inline-block; font-weight: normal; margin-left: 5px; color: #aaa;">직접 입력/없는 아이템</label>
+
     <label>캐릭터 이미지 URL</label><input id="encCharUrl" type="text" placeholder="조우 시 띄울 이미지 URL">
+
     <label id="choicesLabel">선택지</label>
     <div id="choices"></div>
     <div id="addChoiceContainer" style="text-align: right;"><button id="addChoice">선택지 추가</button></div>
+
     <label>기본 트리거 (선택지가 없을 때만 사용)</label>
     <select id="encTrigger">
       <option value="none">없음</option>
@@ -754,8 +703,11 @@
       <option value="map">맵 전환</option>
     </select>
     <label>기본 트리거 데이터(URL/맵명)</label><input id="encData" type="text">
+
     <div style="margin-top:20px; text-align:right; display: flex; justify-content: space-between; align-items: center;">
-      <button id="deleteEncEdit" style="background: #e74c3c; border-color: #c0392b; font-size: 18px; line-height: 1; padding: 6px 10px;"> 🗑️ </button>
+      <button id="deleteEncEdit" style="background: #e74c3c; border-color: #c0392b; font-size: 18px; line-height: 1; padding: 6px 10px;">
+        🗑️
+      </button>
       <div>
         <button id="saveEncEdit">저장</button>
         <button id="closeEncEdit">닫기</button>
@@ -781,7 +733,7 @@
     <h4 id="itemUseName"></h4>
     <img id="itemUseImage" class="item-image" alt="Item Image"/>
     <div class="item-desc" id="itemUseDescription"></div>
-    <div> 
+    <div>
       <button id="useItemBtn" style="background: #2ecc71;">사용</button>
       <button id="closeItemUseModal">닫기</button>
     </div>
@@ -791,13 +743,14 @@
 <div class="modal-bg" id="inventoryModal">
   <div class="modal">
     <h4 id="inventoryModalTitle">플레이어 인벤토리</h4>
-    <div class="list-container" id="inventoryModalList"> 
+    <div class="list-container" id="inventoryModalList">
     </div>
     <div style="margin-top:10px;text-align:right">
       <button id="closeInventoryModal">닫기</button>
     </div>
   </div>
 </div>
+
 <script type="module">
 /* Firebase + 앱 로직 통합 */
 // NOTE: Please replace with your actual Firebase configuration
@@ -828,19 +781,13 @@ const MAX_HP = 100;
 /* --- State Variables --- */
 // **[수정]** encountered 필드 추가 (Key: x_y string)
 let player = {
-    x: 0,
-    y: 0,
-    hp: MAX_HP,
+    x: 0, 
+    y: 0, 
+    hp: MAX_HP, 
     charUrl: '',
-    inventory: {},
-    encountered: {}
+    inventory: {}, // {itemId: count}
+    encountered: {} // {x_y: true}
 };
-let currentItem = null; // P7: 현재 사용/확인 중인 아이템
-let allUsers = {}; // Key: playerId, Value: user data
-let itemDefinitions = {}; // Key: itemId, Value: item definition
-
-let loggedInUserId = null;
-let isAdminMode = false;
 let currentMapName = 'default';
 let encounterPoints = []; // [{x, y, data: {...}}]
 let impassablePoints = []; // [{x, y}]
@@ -857,677 +804,1432 @@ let mapData = {
 let isGridMode = false;
 let isEncounterMode = false;
 let isImpassableMode = false;
-let isDraggingAdminPanel = false;
+let dragStartPoint = null;
+let currentEdit = null; // Currently selected encounter point for editing
+let itemDefinitions = {}; // {itemId: {name, imageUrl, hpRecover, description}}
+
+let loggedInUserId = null;
+let playerMode = false;
+let currentSelectedItem = null; // Item ID for item use modal
+
+let allUsers = {}; // {userId: {hp, x, y, map, charUrl, inventory}}
 
 /* --- DOM Elements --- */
-const gameCanvas = document.getElementById('game');
-const ctx = gameCanvas.getContext('2d');
-const gridDiv = document.getElementById('grid');
-const logChatPanel = document.getElementById('logChatPanel');
-const statusInventoryPanel = document.getElementById('statusInventoryPanel');
-const logDisplay = document.getElementById('logDisplay');
-const chatInput = document.getElementById('chatInput');
-const sendChatBtn = document.getElementById('sendChatBtn');
-const chatNicknameInput = document.getElementById('chatNickname');
-const playerHP = document.getElementById('playerHP');
-const inventoryList = document.getElementById('inventoryList');
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const grid = document.getElementById('grid');
+const dragGhost = document.getElementById('dragGhost');
 const adminPanel = document.getElementById('adminPanel');
-const mapNameInput = document.getElementById('mapName');
 const mapUrlInput = document.getElementById('mapUrl');
+const mapNameInput = document.getElementById('mapName');
 const bgmUrlInput = document.getElementById('bgmUrl');
 const startXInput = document.getElementById('startX');
 const startYInput = document.getElementById('startY');
 const transitionXInput = document.getElementById('transitionX');
 const transitionYInput = document.getElementById('transitionY');
 const nextMapNameInput = document.getElementById('nextMapName');
-const saveMapBtn = document.getElementById('saveMap');
-const reloadBtn = document.getElementById('reload');
-const toggleGridBtn = document.getElementById('toggleGrid');
-const toggleEncounterBtn = document.getElementById('toggleEncounter');
-const toggleImpassableBtn = document.getElementById('toggleImpassable');
-const mapListContainer = document.getElementById('mapListContainer');
+
+const adminBtn = document.getElementById('adminBtn');
 const loginBox = document.getElementById('loginBox');
 const adminPwInput = document.getElementById('adminPw');
 const loginBtn = document.getElementById('loginBtn');
-const adminBtn = document.getElementById('adminBtn');
-const playerLoginBtnTop = document.getElementById('playerLoginBtnTop');
+
 const playerLoginBox = document.getElementById('playerLoginBox');
+const playerLoginBtnTop = document.getElementById('playerLoginBtnTop');
 const playerIdInput = document.getElementById('playerIdInput');
 const playerLoginBtnSubmit = document.getElementById('playerLoginBtnSubmit');
-const userList = document.getElementById('userList');
-const newItemIdInput = document.getElementById('newItemId');
-const newItemNameInput = document.getElementById('newItemName');
-const newItemImageUrlInput = document.getElementById('newItemImageUrl');
-const newItemHpRecoverInput = document.getElementById('newItemHpRecover');
-const newItemDescriptionInput = document.getElementById('newItemDescription');
-const addItemBtn = document.getElementById('addItemBtn');
-const itemListContainer = document.getElementById('itemList');
-const adminInfoMapSpan = document.getElementById('adminInfoMap');
-const adminInfoRemainingEncSpan = document.getElementById('adminInfoRemainingEnc');
-const playerOnMapList = document.getElementById('playerOnMapList');
-const playerMapPlayerList = document.getElementById('playerMapPlayerList'); // P2: 플레이어 모드 플레이어 목록
-const deleteAndInitMapBtn = document.getElementById('deleteAndInitMapBtn'); // D3: 버튼 텍스트 변경
-const deleteAllChatBtn = document.getElementById('deleteAllChatBtn');
 
-// Modals
+const logChatPanel = document.getElementById('logChatPanel');
+const statusInventoryPanel = document.getElementById('statusInventoryPanel');
+const logDisplay = document.getElementById('logDisplay');
+const chatInput = document.getElementById('chatInput');
+const sendChatBtn = document.getElementById('sendChatBtn');
+const playerHP = document.getElementById('playerHP');
+const inventoryList = document.getElementById('inventoryList');
+
+const mapListContainer = document.getElementById('mapListContainer');
+const userList = document.getElementById('userList');
+const itemList = document.getElementById('itemList');
+const giveItemSelect = document.getElementById('giveItemSelect');
+
+/* Enc/Imp Editor Modals */
 const editModalBg = document.getElementById('editModal');
 const encNameInput = document.getElementById('encName');
-const encTextInput = document.getElementById('encText');
+const encTextarea = document.getElementById('encText');
 const encCharUrlInput = document.getElementById('encCharUrl');
+const choicesContainer = document.getElementById('choices');
 const encTriggerSelect = document.getElementById('encTrigger');
 const encDataInput = document.getElementById('encData');
-const saveEncEditBtn = document.getElementById('saveEncEdit');
-const closeEncEditBtn = document.getElementById('closeEncEdit');
-const deleteEncEditBtn = document.getElementById('deleteEncEdit');
+const encItemIdSelect = document.getElementById('encItemIdSelect');
+const encItemIdManual = document.getElementById('encItemIdManual');
+const encItemIdManualCheck = document.getElementById('encItemIdManualCheck');
+
+/* Player Encounter Modal */
 const encounterModalBg = document.getElementById('encounterModalBg');
 const encModalName = document.getElementById('encModalName');
 const encModalText = document.getElementById('encModalText');
-const encCharImgContainer = document.getElementById('encCharImgContainer');
 const encCharImg = document.getElementById('encCharImg');
-const encounterChoicesDiv = document.getElementById('encounterChoices');
+const encounterChoices = document.getElementById('encounterChoices');
 const closeEncounterModalBtn = document.getElementById('closeEncounterModal');
+
+/* Item Use Modal */
 const itemUseModalBg = document.getElementById('itemUseModalBg');
 const itemUseName = document.getElementById('itemUseName');
 const itemUseImage = document.getElementById('itemUseImage');
 const itemUseDescription = document.getElementById('itemUseDescription');
 const useItemBtn = document.getElementById('useItemBtn');
-const closeItemUseModalBtn = document.getElementById('closeItemUseModal');
+
+/* BGM Controls */
+const bgmAudio = document.getElementById('bgmAudio');
+const bgmVolumeInput = document.getElementById('bgmVolume');
+const bgmToggleBtn = document.getElementById('bgmToggleBtn');
+
+/* Admin Info */
+const adminInfoMap = document.getElementById('adminInfoMap');
+const adminInfoRemainingEnc = document.getElementById('adminInfoRemainingEnc');
+const playerOnMapList = document.getElementById('playerOnMapList');
+
+/* Inventory Modal (Admin) */
 const inventoryModal = document.getElementById('inventoryModal');
 const inventoryModalList = document.getElementById('inventoryModalList');
-const closeModalInventoryModal = document.getElementById('closeInventoryModal');
+const inventoryModalTitle = document.getElementById('inventoryModalTitle');
 
-// Item/Choice related
-const encItemIdSelect = document.getElementById('encItemIdSelect');
-const encItemIdManual = document.getElementById('encItemIdManual');
-const encItemIdManualCheck = document.getElementById('encItemIdManualCheck');
-const choicesDiv = document.getElementById('choices');
-const addChoiceBtn = document.getElementById('addChoice');
+/* --- Firebase Interaction Functions (Admin/Player) --- */
 
-// Player Status Admin
-const selectPlayerId = document.getElementById('selectPlayerId');
-const playerHpInput = document.getElementById('playerHpInput');
-const updatePlayerStatusBtn = document.getElementById('updatePlayerStatusBtn');
-const selectPlayerIdMap = document.getElementById('selectPlayerIdMap');
-const playerMapInput = document.getElementById('playerMapInput');
-const playerXInput = document.getElementById('playerXInput');
-const playerYInput = document.getElementById('playerYInput');
-const updatePlayerMapBtn = document.getElementById('updatePlayerMapBtn');
-const giveItemPlayerSelect = document.getElementById('giveItemPlayerSelect');
-const giveItemSelect = document.getElementById('giveItemSelect');
-const giveItemBtn = document.getElementById('giveItemBtn');
-
-/* --- Utility Functions --- */
-
-const getCoordKey = (x, y) => `${x}_${y}`;
-
-// D4: 채팅 타임스탬프 형식 변경을 위한 함수
-const formatTimestamp = (timestamp) => {
-    const now = new Date();
-    const past = timestamp.toDate();
-    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-
-    const oneMinute = 60;
-    const oneHour = 60 * oneMinute;
-    const oneDay = 24 * oneHour;
-
-    // within 1 minute
-    if (diffInSeconds < oneMinute) {
-        return '(방금)'; 
-    } 
-    // within 1 hour: minute unit
-    else if (diffInSeconds < oneHour) {
-        const minutes = Math.floor(diffInSeconds / oneMinute);
-        return `(${minutes}m)`;
-    } 
-    // within 24 hours: hour unit
-    else if (diffInSeconds < oneDay) {
-        const hours = Math.floor(diffInSeconds / oneHour);
-        return `(${hours}h)`;
-    } 
-    // over 24 hours: absolute time
-    else {
-        const y = past.getFullYear();
-        const m = String(past.getMonth() + 1).padStart(2, '0');
-        const d = String(past.getDate()).padStart(2, '0');
-        const hh = String(past.getHours()).padStart(2, '0');
-        const mm = String(past.getMinutes()).padStart(2, '0');
-        return `(${y}-${m}-${d} ${hh}:${mm})`;
-    }
-}
-
-let lastChatDate = null; // D4: 날짜 구분선 제거로 더 이상 사용되지 않음
-
-const addLogItem = (message, type = 'log') => {
-    const logItem = document.createElement('div');
-    logItem.className = `log-item ${type}`;
-    logItem.textContent = message;
-    logDisplay.appendChild(logItem);
-    logDisplay.scrollTop = logDisplay.scrollHeight;
-};
-
-const addChatItem = (id, nickname, message, timestamp, isAdmin) => {
-    const chatDisplay = document.getElementById('logDisplay');
-    const timestampStr = formatTimestamp(timestamp); // D4: 타임스탬프 형식 변경 적용
-    const chatClass = isAdmin ? 'chat-item admin' : 'chat-item';
-    
-    // D4: 날짜 구분선 표시 기능 삭제됨
-    
-    const chatItem = document.createElement('div');
-    chatItem.className = chatClass;
-    // D4: 닉네임 옆에 타임스탬프 표시
-    chatItem.innerHTML = `<span style="color:#5dade2; font-weight: bold;">${nickname}</span> <small style="color:#aaa;">${timestampStr}</small> : ${message}`; 
-
-    // 관리자 기능 (채팅 삭제 버튼)은 관리자 UI 업데이트 시 처리
-
-    chatDisplay.appendChild(chatItem);
-    chatDisplay.scrollTop = chatDisplay.scrollHeight;
-};
-
-const updateAdminUI = (isAdmin) => {
-    isAdminMode = isAdmin;
-    adminBtn.textContent = isAdmin ? '관리자 로그아웃' : '관리자';
-    adminPanel.style.display = isAdmin ? 'block' : 'none';
-    
-    if (loggedInUserId) {
-        // 플레이어 로그인 상태일 경우
-        logChatPanel.style.display = 'flex';
-        statusInventoryPanel.style.display = 'flex';
-        document.getElementById('playerContent').style.display = 'flex';
-        document.getElementById('adminRightInfo').style.display = 'none';
-        playerLoginBtnTop.textContent = '로그아웃';
-    } else if (isAdmin) {
-        // 관리자만 로그인 상태일 경우
-        logChatPanel.style.display = 'flex';
-        statusInventoryPanel.style.display = 'flex';
-        document.getElementById('playerContent').style.display = 'none';
-        document.getElementById('adminRightInfo').style.display = 'flex';
-        playerLoginBtnTop.textContent = '플레이어 로그인';
-    } else {
-        // 아무도 로그인 안 한 상태
-        logChatPanel.style.display = 'none';
-        statusInventoryPanel.style.display = 'none';
-    }
-    
-    // 관리자 채팅 삭제 버튼 토글 (D1: 전체 채팅 기록 보기 버튼은 이미 삭제됨)
-    deleteAllChatBtn.style.display = isAdmin ? 'flex' : 'none';
-};
-
-const updatePlayerUI = (isPlayer) => {
-    if (isPlayer) {
-        // 플레이어 로그인 상태일 경우
-        logChatPanel.style.display = 'flex';
-        statusInventoryPanel.style.display = 'flex';
-        document.getElementById('playerContent').style.display = 'flex';
-        document.getElementById('adminRightInfo').style.display = 'none';
-        playerLoginBtnTop.textContent = '로그아웃';
-        chatInput.disabled = false;
-        sendChatBtn.disabled = false;
-        chatNicknameInput.disabled = true;
-        
-        // HP 업데이트
-        playerHP.textContent = player.hp;
-        
-        // 인벤토리 업데이트
-        inventoryList.innerHTML = '';
-        const items = Object.keys(player.inventory);
-        if (items.length === 0) {
-            inventoryList.innerHTML = '<div style="text-align: center; color: #aaa; padding: 10px;">인벤토리가 비어 있습니다.</div>';
-        } else {
-            items.forEach(itemId => {
-                const count = player.inventory[itemId];
-                if (count > 0) {
-                    const itemData = itemDefinitions[itemId] || { name: itemId, imageUrl: '', description: '아이템 설명이 없습니다.', hpRecover: 0 };
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'inventory-item';
-                    itemDiv.dataset.itemId = itemId;
-                    
-                    itemDiv.innerHTML = `
-                        <img src="${itemData.imageUrl || ''}" class="item-image" alt="Item Image" onerror="this.onerror=null;this.src='https://via.placeholder.com/40x40.png?text=Item'">
-                        <div>
-                            <div class="item-name">${itemData.name} (x${count})</div>
-                            <div class="item-desc">${itemData.description}</div>
-                        </div>
-                    `;
-                    itemDiv.addEventListener('click', () => showItemUseModal(itemId, itemData));
-                    inventoryList.appendChild(itemDiv);
-                }
-            });
-        }
-        
-    } else if (isAdminMode) {
-        // 관리자만 로그인 상태일 경우 (player logout)
-        playerLoginBtnTop.textContent = '플레이어 로그인';
-        document.getElementById('playerContent').style.display = 'none';
-        document.getElementById('adminRightInfo').style.display = 'flex';
-        chatInput.disabled = false;
-        sendChatBtn.disabled = false;
-        chatNicknameInput.disabled = false; // 닉네임 변경 가능
-    } else {
-        // 아무도 로그인 안 한 상태
-        logChatPanel.style.display = 'none';
-        statusInventoryPanel.style.display = 'none';
-        playerLoginBtnTop.textContent = '플레이어 로그인';
-        chatInput.disabled = true;
-        sendChatBtn.disabled = true;
-        chatNicknameInput.disabled = false;
-    }
-};
-
-const isModalOpen = () => {
-    return editModalBg.style.display === 'flex' || 
-           encounterModalBg.style.display === 'flex' || 
-           itemUseModalBg.style.display === 'flex' ||
-           inventoryModal.style.display === 'flex';
-};
-
-/* --- Game/Map Logic --- */
-
-const mapCollection = collection(db, 'maps');
-
-const loadMapDataFromFirestore = async (mapId) => {
-    try {
-        const docRef = doc(mapCollection, mapId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            currentMapName = mapId;
-            mapData = {
-                url: data.url || '',
-                spriteUrl: data.spriteUrl || '',
-                bgmUrl: data.bgmUrl || '',
-                startX: data.startX || 0,
-                startY: data.startY || 0,
-                transitionX: data.transitionX || null,
-                transitionY: data.transitionY || null,
-                nextMapName: data.nextMapName || ''
-            };
-            encounterPoints = data.encounters || [];
-            impassablePoints = data.impassable || [];
-
-            loadMapDataToUI();
-            addLogItem(`시스템: 맵 [${mapId}] 로드 완료.`, 'system');
-            
-            // 플레이어의 위치를 새 맵의 시작 위치로 강제 이동 (맵 전환시)
-            if (loggedInUserId && mapId !== localStorage.getItem('currentMap')) {
-                player.x = mapData.startX;
-                player.y = mapData.startY;
-                await updatePlayerPosition(player.x, player.y); // DB 위치도 업데이트
-            } else if (loggedInUserId) {
-                // 로그인 시, 로컬 저장된 위치 사용
-                player.x = parseInt(localStorage.getItem('playerX')) || mapData.startX;
-                player.y = parseInt(localStorage.getItem('playerY')) || mapData.startY;
-            } else {
-                // 비로그인 시, 맵 시작 위치만 로컬에 저장
-                player.x = mapData.startX;
-                player.y = mapData.startY;
-            }
-
-            draw();
-            return true;
-        } else {
-            addLogItem(`시스템: 맵 [${mapId}] 데이터가 Firestore에 없습니다.`, 'system');
-            return false;
-        }
-    } catch (e) {
-        console.error("맵 로드 실패:", e);
-        addLogItem(`시스템: 맵 로드 중 오류 발생 (${mapId}).`, 'system');
-        return false;
-    }
-};
-
-const loadMapDataToUI = () => {
-    mapNameInput.value = currentMapName;
-    mapUrlInput.value = mapData.url;
-    bgmUrlInput.value = mapData.bgmUrl;
-    startXInput.value = mapData.startX;
-    startYInput.value = mapData.startY;
-    transitionXInput.value = mapData.transitionX || '';
-    transitionYInput.value = mapData.transitionY || '';
-    nextMapNameInput.value = mapData.nextMapName || '';
-
-    // BGM 설정
-    const bgmAudio = document.getElementById('bgmAudio');
-    if (bgmAudio.src !== mapData.bgmUrl) {
-        bgmAudio.src = mapData.bgmUrl || '';
-        bgmAudio.load();
-        if (bgmAudio.paused && bgmAudio.volume > 0) {
-            bgmAudio.play().catch(e => console.log("BGM Play failed:", e));
-        }
-    }
-    
-    adminInfoMapSpan.textContent = currentMapName;
-    adminInfoRemainingEncSpan.textContent = encounterPoints.length;
-};
-
-const loadMap = async (mapId) => {
-    const loaded = await loadMapDataFromFirestore(mapId);
-    if (loaded) {
-        localStorage.setItem('currentMap', mapId);
-    }
-};
-
-const saveMap = async () => {
-    if (!isAdminMode) return;
-    const mapId = mapNameInput.value.trim();
-    if (!mapId) {
+/**
+ * 맵 데이터 (Map, Encounters, Impassable)를 Firebase에 저장합니다.
+ */
+const saveMapDataToFirestore = async (mapName) => {
+    if (!mapName) {
         alert('맵 이름을 입력해주세요.');
         return;
     }
 
     try {
-        const dataToSave = {
+        // 맵 기본 정보
+        const mapDocRef = doc(db, "maps", mapName);
+        const mapDataToSave = {
             url: mapUrlInput.value,
             bgmUrl: bgmUrlInput.value,
             startX: parseInt(startXInput.value) || 0,
             startY: parseInt(startYInput.value) || 0,
             transitionX: transitionXInput.value ? parseInt(transitionXInput.value) : null,
             transitionY: transitionYInput.value ? parseInt(transitionYInput.value) : null,
-            nextMapName: nextMapNameInput.value.trim(),
-            encounters: encounterPoints,
-            impassable: impassablePoints
+            nextMapName: nextMapNameInput.value || '',
+            lastUpdated: serverTimestamp()
         };
+        await setDoc(mapDocRef, mapDataToSave, { merge: true });
 
-        await setDoc(doc(mapCollection, mapId), dataToSave);
-        currentMapName = mapId;
-        addLogItem(`시스템: 맵 [${mapId}] 저장 완료.`, 'system');
-        
-        await reloadMapList(); // 맵 목록 갱신
+        // 조우 데이터
+        const encDocRef = doc(db, "encounters", mapName);
+        const encountersToSave = encounterPoints.map(p => ({
+            x: p.x,
+            y: p.y,
+            data: p.data
+        }));
+        await setDoc(encDocRef, { points: encountersToSave }, { merge: true });
+
+        // 이동 불가 데이터
+        const impDocRef = doc(db, "impassable", mapName);
+        const impassableToSave = impassablePoints.map(p => ({
+            x: p.x,
+            y: p.y
+        }));
+        await setDoc(impDocRef, { points: impassableToSave }, { merge: true });
+
+        addLogItem(`시스템: 맵 **[${mapName}]** 데이터 저장 완료.`, 'system');
+        reloadMapList();
     } catch (e) {
-        console.error("맵 저장 실패:", e);
-        addLogItem(`시스템: 맵 저장 중 오류 발생 (${mapId}).`, 'system');
+        console.error("Error saving document: ", e);
+        addLogItem("시스템: 맵 데이터 저장 실패.", 'system');
+        alert(`맵 데이터 저장 중 오류 발생: ${e.message}`);
     }
 };
 
-const reloadMapList = async () => {
-    if (!isAdminMode) return;
+/**
+ * Firebase에서 맵 데이터 (Map, Encounters, Impassable)를 로드하고 맵을 갱신합니다.
+ */
+const loadMapDataFromFirestore = async (mapName) => {
     try {
-        const q = query(mapCollection);
-        const querySnapshot = await getDocs(q);
-        mapListContainer.innerHTML = '';
+        currentMapName = mapName;
+        localStorage.setItem('currentMap', mapName); // 로컬 저장소에 현재 맵 저장
 
-        querySnapshot.forEach((doc) => {
-            const mapId = doc.id;
-            const item = document.createElement('div');
-            item.className = 'map-list-item';
-            item.innerHTML = `
-                <span>${mapId}</span>
-                <div>
-                    <button onclick="loadMap('${mapId}')">로드</button>
-                    <button style="margin-left: 5px; background: #550000;" onclick="deleteMap('${mapId}')">삭제</button>
+        // 맵 기본 정보 로드
+        const mapDocRef = doc(db, "maps", mapName);
+        const mapDoc = await getDoc(mapDocRef);
+
+        if (mapDoc.exists()) {
+            mapData = mapDoc.data();
+            mapUrlInput.value = mapData.url || '';
+            bgmUrlInput.value = mapData.bgmUrl || '';
+            startXInput.value = mapData.startX || 0;
+            startYInput.value = mapData.startY || 0;
+            transitionXInput.value = mapData.transitionX !== null ? mapData.transitionX : '';
+            transitionYInput.value = mapData.transitionY !== null ? mapData.transitionY : '';
+            nextMapNameInput.value = mapData.nextMapName || '';
+            mapNameInput.value = mapName;
+        } else {
+            // 맵이 없는 경우 초기화
+            mapData = { url: '', spriteUrl: '', bgmUrl: '', startX: 0, startY: 0, transitionX: null, transitionY: null, nextMapName: '' };
+            mapUrlInput.value = '';
+            bgmUrlInput.value = '';
+            startXInput.value = 0;
+            startYInput.value = 0;
+            transitionXInput.value = '';
+            transitionYInput.value = '';
+            nextMapNameInput.value = '';
+            mapNameInput.value = mapName;
+            addLogItem(`시스템: 맵 **[${mapName}]** 데이터가 Firebase에 없어 기본값으로 로드.`, 'system');
+            updateAdminInfo();
+            draw(); // 바로 그리기
+            return false;
+        }
+
+        // 조우 데이터 로드
+        const encDocRef = doc(db, "encounters", mapName);
+        const encDoc = await getDoc(encDocRef);
+        if (encDoc.exists() && encDoc.data().points) {
+            encounterPoints = encDoc.data().points;
+        } else {
+            encounterPoints = [];
+        }
+
+        // 이동 불가 데이터 로드
+        const impDocRef = doc(db, "impassable", mapName);
+        const impDoc = await getDoc(impDocRef);
+        if (impDoc.exists() && impDoc.data().points) {
+            impassablePoints = impDoc.data().points;
+        } else {
+            impassablePoints = [];
+        }
+
+        addLogItem(`시스템: 맵 **[${mapName}]** 데이터 로드 완료.`, 'system');
+        updateAdminInfo();
+        draw();
+        updatePlayerBGM();
+
+        // 플레이어 모드이고, 해당 맵으로 이동해야 할 경우 좌표 이동
+        if (playerMode && loggedInUserId) {
+            if (player.map !== mapName) {
+                // DB의 플레이어 맵 정보도 업데이트
+                await setPlayerPosition(mapName, mapData.startX, mapData.startY, false); 
+                player.map = mapName;
+                player.x = mapData.startX;
+                player.y = mapData.startY;
+            }
+            startXInput.value = player.x;
+            startYInput.value = player.y; 
+            draw();
+            // 맵 변경 시 조우 초기화
+            player.encountered = {};
+            await setPlayerEncountered(player.encountered);
+            addLogItem(`시스템: 플레이어의 맵이 **[${mapName}]**으로 변경되었습니다.`, 'system');
+        }
+
+        return true;
+
+    } catch (e) {
+        console.error("Error loading document: ", e);
+        addLogItem("시스템: 맵 데이터 로드 실패. 기본값으로 재시도.", 'system');
+        // 로드 실패 시 상태 초기화
+        currentMapName = mapName;
+        mapData = { url: '', spriteUrl: '', bgmUrl: '', startX: 0, startY: 0, transitionX: null, transitionY: null, nextMapName: '' };
+        encounterPoints = [];
+        impassablePoints = [];
+        updateAdminInfo();
+        draw();
+        return false;
+    }
+};
+
+/**
+ * 맵 목록을 Firebase에서 가져와 관리자 패널에 표시합니다.
+ */
+const reloadMapList = async () => {
+    try {
+        const q = query(collection(db, "maps"), orderBy("lastUpdated", "desc"));
+        const snapshot = await getDocs(q);
+        let html = '';
+        snapshot.forEach(doc => {
+            const mapName = doc.id;
+            const mapInfo = doc.data();
+            const lastUpdated = mapInfo.lastUpdated ? new Date(mapInfo.lastUpdated.seconds * 1000).toLocaleString() : 'N/A';
+            
+            html += `
+                <div class="map-list-item" data-map-name="${mapName}">
+                    <span style="flex-grow: 1;">${mapName}</span>
+                    <small>(${lastUpdated})</small>
+                    <button class="load-map-btn" data-map-name="${mapName}">로드</button>
+                    <button class="delete-map-btn" data-map-name="${mapName}" style="margin-left: 5px;">삭제</button>
                 </div>
             `;
-            mapListContainer.appendChild(item);
         });
-        // 맵 목록에 필요한 함수를 window에 등록
-        window.loadMap = loadMap;
-        window.deleteMap = deleteMap;
+        mapListContainer.innerHTML = html || '<div style="text-align: center; color: #aaa; font-size: 13px;">저장된 맵이 없습니다.</div>';
+
+        // 이벤트 리스너 재할당
+        mapListContainer.querySelectorAll('.load-map-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                loadMapDataFromFirestore(e.target.dataset.mapName);
+            };
+        });
+        mapListContainer.querySelectorAll('.delete-map-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                if (confirm(`${e.target.dataset.mapName} 맵의 모든 데이터(맵, 조우, 제한)를 Firebase에서 삭제하시겠습니까?`)) {
+                    deleteMapData(e.target.dataset.mapName);
+                }
+            };
+        });
 
     } catch (e) {
-        console.error("맵 목록 로드 실패:", e);
-        addLogItem("시스템: 맵 목록 로드 중 오류 발생.", 'system');
+        console.error("Error loading map list: ", e);
+        addLogItem("시스템: 맵 목록 로드 실패.", 'system');
     }
 };
 
-const deleteMap = async (mapId) => {
-    if (!isAdminMode) return;
-    if (confirm(`정말로 맵 [${mapId}]을(를) 삭제하시겠습니까?`)) {
-        try {
-            await deleteDoc(doc(mapCollection, mapId));
-            addLogItem(`시스템: 맵 [${mapId}] 삭제 완료.`, 'system');
+/**
+ * Firebase에서 특정 맵의 모든 데이터(맵, 조우, 제한)를 삭제합니다.
+ */
+const deleteMapData = async (mapName) => {
+    if (!mapName) return;
+
+    try {
+        await deleteDoc(doc(db, "maps", mapName));
+        await deleteDoc(doc(db, "encounters", mapName));
+        await deleteDoc(doc(db, "impassable", mapName));
+
+        addLogItem(`시스템: 맵 **[${mapName}]**의 모든 데이터가 삭제되었습니다.`, 'system');
+        reloadMapList();
+
+        // 삭제된 맵이 현재 맵이라면 초기화
+        if (currentMapName === mapName) {
+            loadMapDataFromFirestore('default');
+        }
+
+    } catch (e) {
+        console.error("Error deleting map data: ", e);
+        addLogItem(`시스템: 맵 **[${mapName}]** 데이터 삭제 실패.`, 'system');
+        alert(`맵 데이터 삭제 중 오류 발생: ${e.message}`);
+    }
+}
+
+/**
+ * 플레이어 데이터를 Firebase에 업데이트합니다.
+ */
+const updatePlayerFirestore = async () => {
+    if (!loggedInUserId) return;
+    try {
+        const playerDocRef = doc(db, "players", loggedInUserId);
+        const dataToUpdate = {
+            hp: player.hp,
+            inventory: player.inventory,
+            map: currentMapName,
+            x: player.x,
+            y: player.y,
+            encountered: player.encountered,
+            lastPlayed: serverTimestamp()
+        };
+        await updateDoc(playerDocRef, dataToUpdate);
+    } catch (e) {
+        console.error("Error updating player data: ", e);
+    }
+};
+
+/**
+ * 플레이어의 인벤토리를 업데이트합니다.
+ */
+const setPlayerInventory = async (newInventory) => {
+    if (!loggedInUserId) return;
+    player.inventory = newInventory;
+    renderInventory();
+    await updatePlayerFirestore();
+}
+
+/**
+ * 플레이어의 HP를 업데이트하고 UI를 갱신합니다.
+ */
+const setPlayerHP = async (newHP) => {
+    if (!loggedInUserId) return;
+    player.hp = Math.max(0, Math.min(MAX_HP, newHP));
+    playerHP.textContent = player.hp;
+    await updatePlayerFirestore();
+    
+    if (player.hp <= 0) {
+        alert("당신은 쓰러졌습니다...");
+        // **[수정]** HP가 0이 되면 시작 지점으로 이동 (혹은 다른 사망 처리)
+        await setPlayerPosition(currentMapName, mapData.startX, mapData.startY);
+        await setPlayerHP(MAX_HP);
+        addLogItem("시스템: HP가 0이 되어 시작 지점으로 돌아왔습니다. (HP 회복)", 'system');
+    }
+}
+
+/**
+ * 플레이어의 맵/위치를 업데이트합니다.
+ */
+const setPlayerPosition = async (map, x, y, updateDB = true) => {
+    if (!loggedInUserId) return;
+    player.map = map;
+    player.x = x;
+    player.y = y;
+    localStorage.setItem('currentMap', map);
+    
+    if (updateDB) {
+        await updatePlayerFirestore();
+    }
+    draw();
+    startXInput.value = player.x;
+    startYInput.value = player.y; 
+}
+
+/**
+ * 플레이어의 조우 기록을 업데이트합니다.
+ */
+const setPlayerEncountered = async (newEncountered) => {
+    if (!loggedInUserId) return;
+    player.encountered = newEncountered;
+    await updatePlayerFirestore();
+}
+
+
+/**
+ * Firebase에서 플레이어 데이터를 로드합니다.
+ */
+const loadPlayerFromFirestore = async (userId) => {
+    try {
+        const playerDocRef = doc(db, "players", userId);
+        const playerDoc = await getDoc(playerDocRef);
+
+        if (playerDoc.exists()) {
+            const data = playerDoc.data();
+            player.hp = data.hp || MAX_HP;
+            player.charUrl = data.charUrl || '';
+            player.inventory = data.inventory || {};
+            player.encountered = data.encountered || {};
+            player.map = data.map || 'default';
+            player.x = data.x || mapData.startX || 0;
+            player.y = data.y || mapData.startY || 0;
             
-            if (currentMapName === mapId) {
-                initMapData();
-                draw();
+            // 맵이 현재 맵과 다르면 로드
+            if (player.map !== currentMapName) {
+                await loadMapDataFromFirestore(player.map);
             }
-            await reloadMapList();
-        } catch (e) {
-            console.error("맵 삭제 실패:", e);
-            addLogItem(`시스템: 맵 삭제 중 오류 발생 (${mapId}).`, 'system');
+            
+            // UI 갱신
+            playerHP.textContent = player.hp;
+            startXInput.value = player.x;
+            startYInput.value = player.y;
+            mapNameInput.value = player.map;
+            renderInventory();
+            draw();
+            return true;
+        } else {
+            // 새 플레이어 생성
+            const charUrl = prompt("새로운 플레이어입니다! 캐릭터 이미지 URL을 입력해주세요.", "");
+            const newPlayer = {
+                id: userId,
+                hp: MAX_HP,
+                charUrl: charUrl || 'https://via.placeholder.com/32/3498db/FFFFFF?text=P',
+                inventory: {},
+                map: 'default',
+                x: mapData.startX || 0,
+                y: mapData.startY || 0,
+                encountered: {},
+                lastPlayed: serverTimestamp(),
+                isAdmin: false
+            };
+            await setDoc(playerDocRef, newPlayer);
+            
+            player = { ...newPlayer }; // 상태 업데이트
+            playerHP.textContent = player.hp;
+            startXInput.value = player.x;
+            startYInput.value = player.y;
+            mapNameInput.value = player.map;
+            renderInventory();
+            draw();
+            addLogItem(`시스템: 새로운 플레이어 **[${userId}]** 계정 생성 및 로그인 완료.`, 'system');
+            return true;
         }
+    } catch (e) {
+        console.error("Error loading player data: ", e);
+        addLogItem("시스템: 플레이어 데이터 로드 실패.", 'system');
+        return false;
     }
 };
 
-// 미니맵 좌표 클릭 처리 (관리자 모드)
-const handleMapClick = (event) => {
-    if (!isAdminMode) return;
+/**
+ * 아이템 정의 목록을 Firebase에서 가져옵니다.
+ */
+const fetchAllItems = async (updateUI = false) => {
+    try {
+        const q = query(collection(db, "items"));
+        const snapshot = await getDocs(q);
+        itemDefinitions = {};
+        let selectOptions = '<option value="">(선택 안 함)</option>';
 
-    const rect = gameCanvas.getBoundingClientRect();
-    const x = Math.floor((event.clientX - rect.left) / GRID);
-    const y = Math.floor((event.clientY - rect.top) / GRID);
+        snapshot.forEach(doc => {
+            const item = doc.data();
+            itemDefinitions[doc.id] = item;
+            selectOptions += `<option value="${doc.id}">${item.name} (${doc.id})</option>`;
+        });
 
-    if (isEncounterMode) {
-        let existingEnc = isEncounterPoint(x, y);
-        if (existingEnc) {
-            showEditModal(existingEnc); // 수정 모달
-        } else {
-            showEditModal({ x, y, data: { name: '새 조우', text: '무엇을 하시겠습니까?', charUrl: '', itemId: '', trigger: 'none', data: '', choices: [] } }); // 새 조우 추가
+        // 조우 수정 모달의 아이템 선택 드롭다운 업데이트
+        encItemIdSelect.innerHTML = selectOptions; 
+        document.getElementById('giveItemSelect').innerHTML = selectOptions;
+
+        if (updateUI) {
+            renderItemList();
+            renderInventory();
         }
-        isEncounterMode = false;
-        toggleEncounterBtn.classList.remove('active');
-        draw();
-    } else if (isImpassableMode) {
-        let index = impassablePoints.findIndex(p => p.x === x && p.y === y);
-        if (index > -1) {
-            impassablePoints.splice(index, 1); // 제거
-            addLogItem(`시스템: 제한 구역 (${x}, ${y}) 제거.`, 'system');
-        } else {
-            impassablePoints.push({ x, y }); // 추가
-            addLogItem(`시스템: 제한 구역 (${x}, ${y}) 추가.`, 'system');
-        }
-        draw();
-    } else {
-        // 일반 클릭 (조우/제한 구역이 아닐 경우)
-        const enc = isEncounterPoint(x, y);
-        const imp = checkImpassable(x, y);
-        if (enc) {
-            showEditModal(enc);
-        } else if (imp) {
-            addLogItem(`시스템: (${x}, ${y})는 이동 제한 구역입니다.`, 'system');
-        } else {
-            addLogItem(`시스템: 맵 좌표 (${x}, ${y}) 클릭.`, 'system');
-        }
-    }
-};
-
-gameCanvas.addEventListener('click', handleMapClick);
-
-const draw = () => {
-    // 캔버스 초기화
-    ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-
-    // 맵 이미지 그리기
-    const mapImage = new Image();
-    mapImage.onload = () => {
-        ctx.drawImage(mapImage, 0, 0, gameCanvas.width, gameCanvas.height);
         
-        // 그리드 그리기
-        if (isGridMode) {
-            drawGrid();
-        }
-
-        // 제한 구역 표시
-        if (isAdminMode) {
-            impassablePoints.forEach(p => {
-                ctx.fillStyle = 'rgba(255, 0, 0, 0.4)';
-                ctx.fillRect(p.x * GRID, p.y * GRID, GRID, GRID);
-            });
-        }
-
-        // 조우 지점 표시
-        if (isAdminMode) {
-            encounterPoints.forEach(p => {
-                ctx.fillStyle = 'rgba(0, 255, 255, 0.4)';
-                ctx.fillRect(p.x * GRID, p.y * GRID, GRID, GRID);
-            });
-        }
-
-        // 맵 이동 지점 표시
-        if (mapData.transitionX !== null && mapData.transitionY !== null) {
-            ctx.strokeStyle = '#2ecc71';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(mapData.transitionX * GRID, mapData.transitionY * GRID, GRID, GRID);
-        }
-
-        // 플레이어 캐릭터 그리기
-        if (loggedInUserId) {
-            const charImage = new Image();
-            charImage.onload = () => {
-                ctx.drawImage(charImage, player.x * GRID, player.y * GRID, GRID, GRID);
-            };
-            charImage.onerror = () => {
-                 // 이미지 로드 실패 시 플레이어 위치에 빨간 점 표시
-                ctx.fillStyle = 'red'; 
-                ctx.fillRect(player.x * GRID, player.y * GRID, GRID, GRID);
-            }
-            charImage.src = player.charUrl || 'https://via.placeholder.com/32x32.png?text=P';
-        }
-    };
-    mapImage.onerror = () => {
-        // 이미지 로드 실패 시 기본 검은색 배경 유지
-        addLogItem('시스템: 맵 이미지 로드 실패.', 'system');
-        // 그리드만 다시 그리기 (혹시 맵 이미지가 그리드 위에 덧씌워지므로)
-        if (isGridMode) {
-            drawGrid();
-        }
-         // 플레이어 그리기만 실행
-        if (loggedInUserId) {
-            const charImage = new Image();
-            charImage.onload = () => {
-                ctx.drawImage(charImage, player.x * GRID, player.y * GRID, GRID, GRID);
-            };
-            charImage.onerror = () => {
-                 // 이미지 로드 실패 시 플레이어 위치에 빨간 점 표시
-                ctx.fillStyle = 'red'; 
-                ctx.fillRect(player.x * GRID, player.y * GRID, GRID, GRID);
-            }
-            charImage.src = player.charUrl || 'https://via.placeholder.com/32x32.png?text=P';
-        }
-    };
-    mapImage.src = mapData.url || '';
-};
-
-const drawGrid = () => {
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < gameCanvas.width; x += GRID) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, gameCanvas.height);
-        ctx.stroke();
-    }
-    for (let y = 0; y < gameCanvas.height; y += GRID) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(gameCanvas.width, y);
-        ctx.stroke();
+    } catch (e) {
+        console.error("Error fetching items: ", e);
+        addLogItem("시스템: 아이템 정의 로드 실패.", 'system');
     }
 };
 
-const initMapData = () => {
-    currentMapName = 'default';
-    encounterPoints = [];
-    impassablePoints = [];
-    mapData = {
-        url: '',
-        spriteUrl: '',
-        bgmUrl: '',
-        startX: 0,
-        startY: 0,
-        transitionX: null,
-        transitionY: null,
-        nextMapName: ''
-    };
-    mapNameInput.value = 'default';
-    mapUrlInput.value = '';
-    bgmUrlInput.value = '';
-    transitionXInput.value = '';
-    transitionYInput.value = '';
-    nextMapNameInput.value = '';
-    adminInfoMapSpan.textContent = '-';
-    adminInfoRemainingEncSpan.textContent = '0';
+/**
+ * 모든 사용자 목록을 가져옵니다.
+ */
+const fetchAllUsers = async (updateUI = false) => {
+    try {
+        const q = query(collection(db, "players"), orderBy("lastPlayed", "desc"));
+        const snapshot = await getDocs(q);
+        allUsers = {};
+        let userSelectOptions = '';
+        let userMapSelectOptions = '';
+
+        snapshot.forEach(doc => {
+            const user = doc.data();
+            allUsers[doc.id] = user;
+            userSelectOptions += `<option value="${doc.id}">${doc.id} (HP: ${user.hp || MAX_HP})</option>`;
+            userMapSelectOptions += `<option value="${doc.id}">${doc.id} (맵: ${user.map || 'N/A'})</option>`;
+        });
+        
+        // 관리자 UI 업데이트
+        if (updateUI) {
+            renderUserList();
+            updatePlayerOnMapList();
+            document.getElementById('selectPlayerId').innerHTML = userSelectOptions;
+            document.getElementById('selectPlayerIdMap').innerHTML = userMapSelectOptions;
+            document.getElementById('giveItemPlayerSelect').innerHTML = userMapSelectOptions;
+        }
+
+    } catch (e) {
+        console.error("Error fetching users: ", e);
+        addLogItem("시스템: 사용자 목록 로드 실패.", 'system');
+    }
 };
 
-const checkImpassable = (x, y) => {
+/**
+ * 플레이어에게 아이템을 지급합니다.
+ */
+const addItemToPlayer = async (userId, itemId, count = 1) => {
+    if (!userId || !itemId || count <= 0) return;
+
+    try {
+        await runTransaction(db, async (transaction) => {
+            const playerDocRef = doc(db, "players", userId);
+            const playerDoc = await transaction.get(playerDocRef);
+            
+            if (!playerDoc.exists()) {
+                throw "Player not found!";
+            }
+            
+            const currentInventory = playerDoc.data().inventory || {};
+            const newCount = (currentInventory[itemId] || 0) + count;
+            
+            currentInventory[itemId] = newCount;
+            
+            transaction.update(playerDocRef, { inventory: currentInventory });
+
+            // 현재 로그인된 플레이어라면 상태 업데이트
+            if (loggedInUserId === userId) {
+                player.inventory = currentInventory;
+                renderInventory();
+            }
+            
+            // 로그 기록
+            addLogItem(`시스템: **${userId}**가 [${itemDefinitions[itemId]?.name || itemId}] ${count}개를 획득했습니다.`, 'item');
+
+            // 관리자 UI 업데이트
+            fetchAllUsers(true);
+        });
+
+    } catch (e) {
+        console.error("Error adding item to player: ", e);
+        addLogItem(`시스템: ${userId}에게 아이템 지급 실패.`, 'system');
+    }
+}
+
+/**
+ * 플레이어에게서 아이템을 제거합니다.
+ */
+const removeItemFromPlayer = async (userId, itemId, count = 1) => {
+    if (!userId || !itemId || count <= 0) return;
+
+    try {
+        await runTransaction(db, async (transaction) => {
+            const playerDocRef = doc(db, "players", userId);
+            const playerDoc = await transaction.get(playerDocRef);
+            
+            if (!playerDoc.exists()) {
+                throw "Player not found!";
+            }
+            
+            const currentInventory = playerDoc.data().inventory || {};
+            const currentCount = currentInventory[itemId] || 0;
+            
+            if (currentCount < count) {
+                throw "Not enough items in inventory!";
+            }
+            
+            const newCount = currentCount - count;
+            
+            if (newCount <= 0) {
+                delete currentInventory[itemId];
+            } else {
+                currentInventory[itemId] = newCount;
+            }
+            
+            transaction.update(playerDocRef, { inventory: currentInventory });
+            
+            // 현재 로그인된 플레이어라면 상태 업데이트
+            if (loggedInUserId === userId) {
+                player.inventory = currentInventory;
+                renderInventory();
+            }
+
+            // 로그 기록 (시스템 로그)
+            addLogItem(`시스템: **${userId}**의 인벤토리에서 [${itemDefinitions[itemId]?.name || itemId}] ${count}개 제거.`, 'system');
+
+            // 관리자 UI 업데이트
+            fetchAllUsers(true);
+        });
+
+    } catch (e) {
+        console.error("Error removing item from player: ", e);
+        addLogItem(`시스템: ${userId}에게서 아이템 제거 실패.`, 'system');
+    }
+}
+
+/* --- Utility Functions --- */
+
+/**
+ * 로컬 로그/채팅 기록에 아이템을 추가합니다.
+ */
+const addLogItem = (text, type = 'log') => {
+    const logItem = document.createElement('div');
+    logItem.classList.add(type === 'chat' ? 'chat-item' : 'log-item');
+    
+    // 관리자일 경우 채팅 아이템에 관리 기능 추가
+    if (type === 'chat' && loggedInUserId === ADMIN_EMAIL) {
+        const userId = text.match(/\[(.*?)\]/)?.[1] || 'Unknown';
+        const isAdmin = allUsers[userId]?.isAdmin || false;
+        logItem.innerHTML = `
+            ${text}
+            <span class="admin-actions" style="display: ${isAdmin ? 'none' : 'inline-block'};">
+                <button onclick="window.toggleAdmin('${userId}')">관리자 부여/회수</button>
+            </span>
+        `;
+    } else {
+        logItem.textContent = text;
+    }
+
+    if (type === 'chat' && allUsers[loggedInUserId]?.isAdmin) {
+        logItem.classList.add('admin');
+    } else if (type === 'chat' && loggedInUserId) {
+        logItem.classList.add('player');
+    }
+
+    if (type === 'system') {
+        logItem.classList.add('system');
+    } else if (type === 'item') {
+        logItem.classList.add('item');
+    }
+    
+    logDisplay.appendChild(logItem);
+    logDisplay.scrollTop = logDisplay.scrollHeight;
+};
+
+/**
+ * 모든 채팅 기록을 Firebase에서 가져와 표시합니다.
+ */
+const fetchAllChatHistory = async () => {
+    try {
+        const chatCollectionRef = collection(db, "chat");
+        const q = query(chatCollectionRef, orderBy("timestamp", "asc"));
+        const snapshot = await getDocs(q);
+
+        logDisplay.innerHTML = '<div class="log-item system">시스템: 전체 채팅 기록 로드 시작.</div>';
+        snapshot.forEach(doc => {
+            const chat = doc.data();
+            let text = `[${chat.userId}]: ${chat.message}`;
+            const type = 'chat';
+            
+            const logItem = document.createElement('div');
+            logItem.classList.add('chat-item');
+            
+            if (chat.isAdmin) {
+                logItem.classList.add('admin');
+                text = `[ADMIN ${chat.userId}]: ${chat.message}`;
+            }
+
+            logItem.textContent = text;
+            logDisplay.appendChild(logItem);
+        });
+
+        logDisplay.scrollTop = logDisplay.scrollHeight;
+
+    } catch (e) {
+        console.error("Error fetching chat history: ", e);
+        addLogItem("시스템: 전체 채팅 기록 로드 실패.", 'system');
+    }
+}
+
+/**
+ * 실시간으로 채팅을 수신하는 리스너
+ */
+const startChatListener = () => {
+    const chatCollectionRef = collection(db, "chat");
+    const q = query(chatCollectionRef, orderBy("timestamp", "desc"), limit(1)); // 가장 최근 1개만
+    
+    onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            if (change.type === "added") {
+                const chat = change.doc.data();
+                
+                // 본인이 보낸 메시지는 제외
+                if (chat.userId === loggedInUserId) return; 
+
+                let text = `[${chat.userId}]: ${chat.message}`;
+                
+                if (chat.isAdmin) {
+                    text = `[ADMIN ${chat.userId}]: ${chat.message}`;
+                }
+
+                addLogItem(text, 'chat');
+            }
+        });
+    });
+};
+
+/**
+ * 플레이어가 현재 맵의 이동 불가 지점에 있는지 확인합니다.
+ */
+const isImpassable = (x, y) => {
     return impassablePoints.some(p => p.x === x && p.y === y);
 };
 
-const isEncounterPoint = (x, y) => {
-    return encounterPoints.find(p => p.x === x && p.y === y);
+/**
+ * 플레이어가 현재 맵의 조우 지점에 있는지 확인하고, 이전에 조우하지 않았다면 조우합니다.
+ */
+const checkEncounter = async (x, y) => {
+    const key = `${x}_${y}`;
+    const encPoint = encounterPoints.find(p => p.x === x && p.y === y);
+
+    if (encPoint) {
+        // 이미 조우한 지점인지 확인
+        if (player.encountered[key]) {
+            addLogItem(`시스템: 이미 조우한 지역 (${key}) 입니다.`, 'system');
+            return;
+        }
+
+        // 조우 팝업 표시
+        const data = encPoint.data;
+        encModalName.textContent = data.name || '알 수 없는 조우';
+        encModalText.textContent = data.text || '여기에 텍스트가 표시됩니다.';
+        
+        if (data.charUrl) {
+            encCharImg.src = data.charUrl;
+            encCharImg.style.display = 'block';
+            document.getElementById('encCharImgContainer').style.display = 'flex';
+        } else {
+            encCharImg.style.display = 'none';
+            document.getElementById('encCharImgContainer').style.display = 'none';
+        }
+        
+        encounterChoices.innerHTML = '';
+        closeEncounterModalBtn.style.display = 'none'; // 기본 버튼 숨김
+
+        let choicesPresent = false;
+
+        if (data.choices && data.choices.length > 0) {
+            data.choices.forEach((choice, index) => {
+                // **[수정]** 아이템 요구 조건 확인
+                const isUsable = !choice.itemRequirement || (player.inventory[choice.itemRequirement] || 0) >= 1;
+
+                const button = document.createElement('button');
+                button.textContent = choice.text || `선택지 ${index + 1}`;
+                button.disabled = !isUsable; // 아이템이 없으면 비활성화
+                button.title = isUsable ? '' : `아이템 [${itemDefinitions[choice.itemRequirement]?.name || choice.itemRequirement}]이(가) 필요합니다.`;
+                button.onclick = () => handleChoice(choice, encPoint);
+                encounterChoices.appendChild(button);
+            });
+            choicesPresent = true;
+        } 
+        
+        if (!choicesPresent) {
+             // 선택지가 없으면 기본 트리거 발동 후 '계속 진행' 버튼 표시
+            applyEncounterEffect(encPoint, data.trigger, data.data, data.itemId);
+            closeEncounterModalBtn.style.display = 'block'; 
+        }
+
+        encounterModalBg.style.display = 'flex';
+
+        // 조우 기록
+        player.encountered[key] = true;
+        await setPlayerEncountered(player.encountered);
+        updateAdminInfo(); // 관리자에게 남은 조우 수 갱신
+
+    } else if (mapData.transitionX === x && mapData.transitionY === y) {
+        // 맵 이동 지점
+        if (mapData.nextMapName) {
+            addLogItem(`시스템: **[${mapData.nextMapName}]** 맵으로 이동합니다.`, 'system');
+            // 플레이어 맵 위치를 이동할 맵의 시작 지점으로 변경 후 로드
+            await loadMapDataFromFirestore(mapData.nextMapName);
+        } else {
+             addLogItem("시스템: 맵 클리어 지점이지만, 이동할 다음 맵이 설정되지 않았습니다.", 'system');
+        }
+    }
 };
 
-// 현재 수정 중인 조우 지점 정보 (Admin)
-let editingEncounter = null;
+/**
+ * 선택지 선택 또는 기본 트리거에 따른 효과를 적용합니다.
+ */
+const applyEncounterEffect = async (encPoint, trigger, data, itemId, choice = null) => {
+    let resultText = choice?.resultText || '';
+    let hpChange = choice?.hpChange || 0;
+    
+    // 선택지에 따른 아이템 사용/획득
+    if (choice) {
+        if (choice.itemRequirement) {
+            await removeItemFromPlayer(loggedInUserId, choice.itemRequirement, 1);
+            addLogItem(`시스템: 선택지로 인해 아이템 [${itemDefinitions[choice.itemRequirement]?.name || choice.itemRequirement}] 1개를 사용했습니다.`, 'item');
+        }
+        if (choice.itemGive) {
+             await addItemToPlayer(loggedInUserId, choice.itemGive, 1);
+        }
+    }
 
-// 조우 수정 모달 관련
-const showEditModal = (encounter) => {
-    if (!isAdminMode) return;
-    editingEncounter = encounter;
-    encNameInput.value = encounter.data.name || '';
-    encTextInput.value = encounter.data.text || '';
-    encCharUrlInput.value = encounter.data.charUrl || '';
-    encTriggerSelect.value = encounter.data.trigger || 'none';
-    encDataInput.value = encounter.data.data || '';
-    
-    // 아이템 셀렉트 박스 설정
-    const itemIdToSelect = encounter.data.itemId || '';
-    encItemIdSelect.value = itemIdToSelect;
-    
-    // 직접 입력 체크박스 상태
-    const isManual = !itemDefinitions[itemIdToSelect] && itemIdToSelect;
-    encItemIdManualCheck.checked = isManual;
-    encItemIdManual.style.display = isManual ? 'block' : 'none';
-    encItemIdManual.value = isManual ? itemIdToSelect : '';
+    // HP 변화 적용
+    if (hpChange !== 0) {
+        await setPlayerHP(player.hp + hpChange);
+        resultText += `\n\n(HP ${hpChange > 0 ? '+' : ''}${hpChange} ${hpChange !== 0 ? (hpChange > 0 ? '회복' : '손실') : ''})`;
+    }
 
-    // 선택지 로드
-    renderChoices(encounter.data.choices || []);
+    // 아이템 획득 (조우 자체의 획득 아이템)
+    if (itemId && !choice) { // 선택지가 없고, 기본적으로 획득하는 아이템이 있을 경우
+        await addItemToPlayer(loggedInUserId, itemId, 1);
+    }
     
-    editModalBg.style.display = 'flex';
+    // 결과 텍스트를 모달에 표시
+    if (resultText) {
+        encModalText.textContent += `\n\n[결과]\n${resultText}`;
+    }
+
+    // 트리거 적용
+    switch (trigger) {
+        case 'sound':
+            // 사운드 재생 (TODO: Sound API)
+            addLogItem(`시스템: 사운드 트리거 발동 - ${data}`, 'system');
+            break;
+        case 'image':
+            // 이미지 팝업 (TODO: Image Modal)
+            addLogItem(`시스템: 이미지 팝업 트리거 발동 - ${data}`, 'system');
+            break;
+        case 'map':
+            if (data) {
+                // 맵 전환
+                await loadMapDataFromFirestore(data);
+                addLogItem(`시스템: 맵 전환 트리거 발동 - **[${data}]**으로 이동.`, 'system');
+            }
+            break;
+        case 'none':
+        default:
+            // 아무것도 하지 않음
+            break;
+    }
+}
+
+
+/**
+ * 선택지를 클릭했을 때의 핸들러
+ */
+const handleChoice = (choice, encPoint) => {
+    // 모든 선택지 버튼 비활성화
+    encounterChoices.querySelectorAll('button').forEach(btn => btn.disabled = true);
+    
+    // 선택 결과를 반영하고 기본 버튼 활성화
+    applyEncounterEffect(encPoint, choice.trigger, choice.data, null, choice);
+    closeEncounterModalBtn.style.display = 'block'; 
 };
 
-const closeEditModal = () => {
-    editingEncounter = null;
-    editModalBg.style.display = 'none';
+/**
+ * 맵을 렌더링합니다.
+ */
+const draw = () => {
+    // 맵 이미지 로드
+    const img = new Image();
+    img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        drawPlayer();
+        drawGridAndOverlay();
+    };
+    img.onerror = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fff';
+        ctx.font = '20px Noto Sans KR';
+        ctx.textAlign = 'center';
+        ctx.fillText('맵 이미지 로드 실패 또는 미설정', canvas.width / 2, canvas.height / 2);
+        drawPlayer();
+        drawGridAndOverlay();
+    };
+    img.src = mapUrlInput.value || 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA='; // 투명 이미지
 };
 
+/**
+ * 플레이어 캐릭터를 렌더링합니다.
+ */
+const drawPlayer = () => {
+    if (!loggedInUserId) return;
+
+    const x = player.x * GRID + GRID / 2;
+    const y = player.y * GRID + GRID / 2;
+
+    const charImg = new Image();
+    charImg.onload = () => {
+        // 플레이어 캐릭터를 중앙에 그립니다.
+        const size = GRID * 1.5; 
+        ctx.drawImage(charImg, x - size/2, y - size/2, size, size);
+        
+        // HP 바
+        const hpBarWidth = GRID;
+        const hpBarHeight = 4;
+        const hpBarX = x - hpBarWidth / 2;
+        const hpBarY = y + GRID / 2 + 2; 
+
+        ctx.fillStyle = '#222';
+        ctx.fillRect(hpBarX, hpBarY, hpBarWidth, hpBarHeight);
+        
+        const currentHPWidth = (player.hp / MAX_HP) * hpBarWidth;
+        ctx.fillStyle = player.hp > 50 ? '#2ecc71' : (player.hp > 20 ? '#f1c40f' : '#e74c3c');
+        ctx.fillRect(hpBarX, hpBarY, currentHPWidth, hpBarHeight);
+
+        // 플레이어 닉네임
+        ctx.fillStyle = '#fff';
+        ctx.font = '10px Noto Sans KR';
+        ctx.textAlign = 'center';
+        ctx.fillText(loggedInUserId, x, y - GRID / 2 - 5);
+    };
+
+    charImg.onerror = () => {
+        // 이미지 로드 실패 시 빨간색 사각형으로 표시
+        ctx.fillStyle = '#e74c3c';
+        ctx.fillRect(player.x * GRID, player.y * GRID, GRID, GRID);
+        ctx.fillStyle = '#fff';
+        ctx.font = '12px Noto Sans KR';
+        ctx.textAlign = 'center';
+        ctx.fillText('P', x, y + 5);
+    };
+
+    charImg.src = player.charUrl || 'https://via.placeholder.com/32/3498db/FFFFFF?text=P';
+};
+
+
+/**
+ * 그리드, 조우 구역, 이동 불가 구역을 렌더링합니다. (관리자 모드)
+ */
+const drawGridAndOverlay = () => {
+    grid.innerHTML = '';
+    
+    // 조우 구역 렌더링
+    encounterPoints.forEach(p => {
+        const div = document.createElement('div');
+        div.style.cssText = `
+            position: absolute;
+            left: ${p.x * GRID}px;
+            top: ${p.y * GRID}px;
+            width: ${GRID}px;
+            height: ${GRID}px;
+            background: rgba(192, 57, 43, 0.5); /* Accent Red */
+            border: 1px solid ${isEncounterMode && currentEdit === p ? 'cyan' : 'var(--accent)'};
+            box-sizing: border-box;
+            z-index: 2;
+            cursor: pointer;
+            pointer-events: ${loggedInUserId === ADMIN_EMAIL ? 'auto' : 'none'};
+        `;
+        div.title = `조우: ${p.data.name || '미설정'} (${p.x}, ${p.y})`;
+        div.dataset.x = p.x;
+        div.dataset.y = p.y;
+        div.dataset.type = 'encounter';
+        grid.appendChild(div);
+    });
+
+    // 이동 불가 구역 렌더링
+    impassablePoints.forEach(p => {
+        const div = document.createElement('div');
+        div.style.cssText = `
+            position: absolute;
+            left: ${p.x * GRID}px;
+            top: ${p.y * GRID}px;
+            width: ${GRID}px;
+            height: ${GRID}px;
+            background: rgba(100, 100, 100, 0.7); 
+            border: 1px solid ${isImpassableMode ? 'white' : '#666'};
+            box-sizing: border-box;
+            z-index: 2;
+            cursor: pointer;
+            pointer-events: ${loggedInUserId === ADMIN_EMAIL ? 'auto' : 'none'};
+        `;
+        div.title = `이동 불가 (${p.x}, ${p.y})`;
+        div.dataset.x = p.x;
+        div.dataset.y = p.y;
+        div.dataset.type = 'impassable';
+        grid.appendChild(div);
+    });
+
+    // 맵 이동 구역 렌더링
+    if (mapData.transitionX !== null && mapData.transitionY !== null) {
+        const div = document.createElement('div');
+        div.style.cssText = `
+            position: absolute;
+            left: ${mapData.transitionX * GRID}px;
+            top: ${mapData.transitionY * GRID}px;
+            width: ${GRID}px;
+            height: ${GRID}px;
+            background: rgba(46, 204, 113, 0.5); /* Emerald Green */
+            border: 2px dashed #2ecc71;
+            box-sizing: border-box;
+            z-index: 2;
+            pointer-events: none;
+        `;
+        div.title = `맵 이동: ${mapData.nextMapName || '미설정'} (${mapData.transitionX}, ${mapData.transitionY})`;
+        grid.appendChild(div);
+
+        // 플레이어 모드에서 맵 이동 지점 아이콘 표시
+        if (playerMode) {
+             const icon = document.createElement('div');
+             icon.style.cssText = `
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+             `;
+             icon.textContent = '🚪'; 
+             div.appendChild(icon);
+        }
+    }
+
+
+    // 그리드 표시
+    if (isGridMode) {
+        grid.style.background = `repeating-linear-gradient(to right, var(--border-light) 1px, transparent 1px, transparent ${GRID}px), repeating-linear-gradient(to bottom, var(--border-light) 1px, transparent 1px, transparent ${GRID}px)`;
+    } else {
+        grid.style.background = 'none';
+    }
+};
+
+/**
+ * 인벤토리를 렌더링합니다.
+ */
+const renderInventory = () => {
+    inventoryList.innerHTML = '';
+    
+    const items = Object.keys(player.inventory).filter(id => player.inventory[id] > 0);
+
+    if (items.length === 0) {
+        inventoryList.innerHTML = '<div style="text-align: center; color: #aaa; font-size: 13px;">인벤토리가 비어있습니다.</div>';
+        return;
+    }
+
+    items.forEach(itemId => {
+        const count = player.inventory[itemId];
+        const itemDef = itemDefinitions[itemId] || { name: '알 수 없는 아이템', imageUrl: 'https://via.placeholder.com/40/666666/FFFFFF?text=?', description: '정의되지 않은 아이템입니다.' };
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'inventory-item';
+        itemDiv.dataset.itemId = itemId;
+
+        itemDiv.innerHTML = `
+            <img src="${itemDef.imageUrl}" class="item-image" alt="${itemDef.name}"/>
+            <div style="flex-grow: 1;">
+                <div class="item-name">${itemDef.name} x${count}</div>
+                <div class="item-desc">${itemDef.description}</div>
+            </div>
+        `;
+        
+        // 아이템 사용 모달 표시 이벤트 리스너 (플레이어 모드일 때만)
+        if (playerMode) {
+            itemDiv.onclick = () => showItemUseModal(itemId);
+        }
+
+        inventoryList.appendChild(itemDiv);
+    });
+};
+
+/**
+ * 아이템 사용 모달을 표시합니다.
+ */
+const showItemUseModal = (itemId) => {
+    currentSelectedItem = itemId;
+    const itemDef = itemDefinitions[itemId];
+    
+    if (!itemDef) return;
+
+    itemUseName.textContent = itemDef.name;
+    itemUseImage.src = itemDef.imageUrl;
+    itemUseDescription.textContent = itemDef.description;
+
+    // HP 회복량이 0보다 커야 사용 가능
+    if (itemDef.hpRecover > 0) {
+        useItemBtn.style.display = 'inline-block';
+        useItemBtn.textContent = `사용 (HP ${itemDef.hpRecover > 0 ? '+' : ''}${itemDef.hpRecover})`;
+    } else {
+        useItemBtn.style.display = 'none';
+        itemUseDescription.textContent += "\n(사용할 수 없는 아이템입니다.)";
+    }
+
+    itemUseModalBg.style.display = 'flex';
+}
+
+/**
+ * 아이템 사용 로직
+ */
+const useCurrentItem = async () => {
+    const itemId = currentSelectedItem;
+    if (!itemId || !player.inventory[itemId] || player.inventory[itemId] <= 0) {
+        alert("아이템이 없습니다.");
+        return;
+    }
+    
+    const itemDef = itemDefinitions[itemId];
+    if (!itemDef || itemDef.hpRecover <= 0) {
+        alert("사용할 수 없는 아이템입니다.");
+        return;
+    }
+
+    // 아이템 사용 처리
+    await removeItemFromPlayer(loggedInUserId, itemId, 1);
+    await setPlayerHP(player.hp + itemDef.hpRecover);
+
+    addLogItem(`시스템: [${itemDef.name}]을(를) 사용하여 HP ${itemDef.hpRecover}을(를) 회복했습니다.`, 'item');
+    
+    // 모달 닫기
+    itemUseModalBg.style.display = 'none';
+    currentSelectedItem = null;
+}
+
+/**
+ * 관리자 패널의 사용자 목록을 렌더링합니다.
+ */
+const renderUserList = () => {
+    userList.innerHTML = '';
+    const users = Object.keys(allUsers);
+    
+    if (users.length === 0) {
+        userList.innerHTML = '<div style="text-align: center; color: #aaa; font-size: 13px;">등록된 플레이어가 없습니다.</div>';
+        return;
+    }
+
+    users.forEach(userId => {
+        const user = allUsers[userId];
+        const isAdmin = user.isAdmin ? ' (ADMIN)' : '';
+        const listItem = document.createElement('div');
+        listItem.className = 'list-item';
+
+        listItem.innerHTML = `
+            <span>${userId}${isAdmin} (HP: ${user.hp || MAX_HP}, 맵: ${user.map || 'N/A'})</span>
+            <div>
+                <button onclick="window.showUserInventory('${userId}')">인벤토리</button>
+                <button onclick="window.deletePlayer('${userId}')" class="del">삭제</button>
+            </div>
+        `;
+        userList.appendChild(listItem);
+    });
+}
+
+/**
+ * 관리자 패널의 아이템 목록을 렌더링합니다.
+ */
+const renderItemList = () => {
+    itemList.innerHTML = '';
+    const items = Object.keys(itemDefinitions);
+
+    if (items.length === 0) {
+        itemList.innerHTML = '<div style="text-align: center; color: #aaa; font-size: 13px;">등록된 아이템 정의가 없습니다.</div>';
+        return;
+    }
+
+    items.forEach(itemId => {
+        const item = itemDefinitions[itemId];
+        const listItem = document.createElement('div');
+        listItem.className = 'list-item';
+        listItem.style.flexDirection = 'column';
+        listItem.style.alignItems = 'flex-start';
+
+        listItem.innerHTML = `
+            <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 5px;">
+                <span style="font-weight: bold;">${item.name} (${itemId})</span>
+                <div>
+                    <button onclick="window.editItemDefinition('${itemId}')">수정</button>
+                    <button onclick="window.deleteItemDefinition('${itemId}')" class="del">삭제</button>
+                </div>
+            </div>
+            <small style="color: #aaa;">HP 회복: ${item.hpRecover}</small>
+            <small style="color: #bbb; line-height: 1.4;">${item.description}</small>
+            <small><img src="${item.imageUrl}" style="width: 20px; height: 20px; object-fit: cover; margin-top: 5px; border-radius: 2px;"></small>
+        `;
+        itemList.appendChild(listItem);
+    });
+}
+
+
+/**
+ * 맵 상의 플레이어 목록을 렌더링합니다.
+ */
+const updatePlayerOnMapList = () => {
+    playerOnMapList.innerHTML = '';
+    const playersOnMap = Object.values(allUsers).filter(u => u.map === currentMapName && u.id !== loggedInUserId); // 현재 맵에 있는 다른 플레이어
+
+    if (playersOnMap.length === 0) {
+        playerOnMapList.innerHTML = '<div style="text-align: center; color: #aaa; font-size: 13px;">현재 맵에 다른 플레이어 없음</div>';
+        return;
+    }
+
+    playersOnMap.forEach(u => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'player-on-map-item';
+        itemDiv.innerHTML = `
+            <strong>${u.id}</strong>
+            <small>(${u.x}, ${u.y}) | HP: ${u.hp || MAX_HP}</small>
+        `;
+        playerOnMapList.appendChild(itemDiv);
+    });
+}
+
+/**
+ * 관리자 정보(현재 맵, 남은 조우 수)를 갱신합니다.
+ */
+const updateAdminInfo = () => {
+    adminInfoMap.textContent = currentMapName;
+    
+    // 남은 조우 수 계산
+    const encounteredKeys = Object.keys(player.encountered);
+    const remainingEncounters = encounterPoints.filter(p => {
+        const key = `${p.x}_${p.y}`;
+        return !encounteredKeys.includes(key);
+    }).length;
+
+    adminInfoRemainingEnc.textContent = remainingEncounters;
+    
+    updatePlayerOnMapList();
+}
+
+
+/**
+ * 관리자 패널에 인벤토리 팝업을 표시합니다.
+ */
+window.showUserInventory = (userId) => {
+    const user = allUsers[userId];
+    if (!user) return;
+    
+    inventoryModalTitle.textContent = `${userId}의 인벤토리`;
+    inventoryModalList.innerHTML = '';
+    
+    const items = Object.keys(user.inventory || {}).filter(id => user.inventory[id] > 0);
+
+    if (items.length === 0) {
+        inventoryModalList.innerHTML = '<div style="text-align: center; color: #aaa; font-size: 13px;">인벤토리가 비어있습니다.</div>';
+    } else {
+        items.forEach(itemId => {
+            const count = user.inventory[itemId];
+            const itemDef = itemDefinitions[itemId] || { name: '알 수 없는 아이템', imageUrl: 'https://via.placeholder.com/40/666666/FFFFFF?text=?' };
+            
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'inventory-admin-item';
+            
+            itemDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="${itemDef.imageUrl}" style="width: 30px; height: 30px; object-fit: cover; border-radius: 3px;"/>
+                    <span style="font-weight: bold;">${itemDef.name} x${count}</span>
+                </div>
+                <button onclick="window.removeAdminItem('${userId}', '${itemId}')">제거</button>
+            `;
+            inventoryModalList.appendChild(itemDiv);
+        });
+    }
+
+    inventoryModal.style.display = 'flex';
+}
+
+/**
+ * 관리자용 아이템 제거 함수 (글로벌 스코프)
+ */
+window.removeAdminItem = async (playerId, itemId) => {
+    if (confirm(`${playerId}에게서 아이템 [${itemDefinitions[itemId]?.name || itemId}] 1개를 제거하시겠습니까?`)) {
+        await removeItemFromPlayer(playerId, itemId, 1);
+        // DB 업데이트 후 다시 인벤토리 팝업을 열어 갱신
+        window.showUserInventory(playerId); 
+        fetchAllUsers(true); 
+    }
+};
+
+
+/* --- UI Update Functions --- */
+
+/**
+ * 관리자 UI (패널, 버튼) 상태를 갱신합니다.
+ */
+const updateAdminUI = (isAdmin) => {
+    if (isAdmin) {
+        adminBtn.textContent = '관리자 로그아웃';
+        adminPanel.style.display = 'block';
+        logChatPanel.style.display = 'flex';
+        statusInventoryPanel.style.display = 'flex';
+        document.getElementById('playerContent').style.display = 'none';
+        document.getElementById('adminRightInfo').style.display = 'flex';
+        document.getElementById('deleteAllChatBtn').style.display = 'inline-block';
+        playerLoginBtnTop.style.display = 'none';
+        
+        // 관리자 모드 시 채팅 입력 가능
+        chatInput.disabled = false;
+        sendChatBtn.disabled = false;
+
+        // 관리자 로그인 후 플레이어 정보가 있다면 현재 맵 로드
+        if (player.map && currentMapName !== player.map) {
+            loadMapDataFromFirestore(player.map);
+        } else {
+            updateAdminInfo();
+        }
+
+    } else {
+        adminBtn.textContent = '관리자';
+        adminPanel.style.display = 'none';
+        document.getElementById('deleteAllChatBtn').style.display = 'none';
+        playerLoginBtnTop.style.display = 'inline-block';
+
+        // 관리자 로그아웃 시 플레이어 로그인 상태가 아니면 패널 숨김
+        if (!loggedInUserId || !playerMode) {
+             logChatPanel.style.display = 'none';
+             statusInventoryPanel.style.display = 'none';
+             document.getElementById('playerContent').style.display = 'none';
+             document.getElementById('adminRightInfo').style.display = 'none';
+        }
+    }
+};
+
+/**
+ * 플레이어 UI (패널, 버튼) 상태를 갱신합니다.
+ */
+const updatePlayerUI = (isPlayer) => {
+    playerMode = isPlayer;
+    if (isPlayer) {
+        playerLoginBtnTop.textContent = `${loggedInUserId} 로그아웃`;
+        logChatPanel.style.display = 'flex';
+        statusInventoryPanel.style.display = 'flex';
+        document.getElementById('playerContent').style.display = 'flex';
+        document.getElementById('adminRightInfo').style.display = 'none';
+        
+        // 플레이어 모드 시 채팅 입력 가능
+        chatInput.disabled = false;
+        sendChatBtn.disabled = false;
+        
+        // 관리자 모드가 아닌 경우 인벤토리 등 갱신
+        if (loggedInUserId !== ADMIN_EMAIL) {
+            renderInventory();
+        }
+
+    } else {
+        playerLoginBtnTop.textContent = '플레이어 로그인';
+        
+        // 관리자 로그인 상태가 아니면 패널 숨김
+        if (loggedInUserId !== ADMIN_EMAIL) {
+            logChatPanel.style.display = 'none';
+            statusInventoryPanel.style.display = 'none';
+        }
+        document.getElementById('playerContent').style.display = 'none';
+        
+        // 로그아웃 시 채팅 입력 불가능
+        chatInput.disabled = true;
+        sendChatBtn.disabled = true;
+
+        loggedInUserId = null;
+        player = { x: 0, y: 0, hp: MAX_HP, charUrl: '', inventory: {}, encountered: {} };
+        localStorage.removeItem('loggedInUserId');
+        localStorage.removeItem('currentMap');
+        draw(); // 플레이어 사라짐
+    }
+};
+
+/**
+ * BGM URL을 업데이트하고 재생합니다.
+ */
+const updatePlayerBGM = () => {
+    const newBgmUrl = mapData.bgmUrl || '';
+    if (bgmAudio.src !== newBgmUrl) {
+        bgmAudio.src = newBgmUrl;
+        if (newBgmUrl) {
+            bgmAudio.play().catch(e => {
+                addLogItem("시스템: BGM 자동 재생 실패 (브라우저 정책). 사용자 조작 필요.", 'system');
+                bgmToggleBtn.textContent = 'PLAY';
+            });
+            bgmToggleBtn.textContent = 'PAUSE';
+        } else {
+            bgmAudio.pause();
+            bgmToggleBtn.textContent = 'PLAY';
+        }
+    }
+}
+
+
+/**
+ * 조우 수정 모달에 선택지를 렌더링합니다.
+ */
 const renderChoices = (choices) => {
-    choicesDiv.innerHTML = '';
+    choicesContainer.innerHTML = '';
+    
     choices.forEach((choice, index) => {
         const choiceDiv = document.createElement('div');
         choiceDiv.className = 'choice';
         choiceDiv.dataset.index = index;
-        
-        // 아이템 목록 옵션 생성
-        const itemOptions = Object.keys(itemDefinitions).map(id => 
-            `<option value="${id}" ${choice.itemId === id ? 'selected' : ''}>${itemDefinitions[id].name} (${id})</option>`
-        ).join('');
 
         choiceDiv.innerHTML = `
             <div class="choice-text-group">
-                <label>선택지 텍스트</label>
-                <input type="text" class="choiceText" value="${choice.text || ''}" placeholder="선택지에 표시될 내용">
-                <button class="removeChoice" onclick="removeChoice(${index})">❌</button>
+                <label>텍스트</label>
+                <input type="text" class="choiceText" value="${choice.text || ''}" placeholder="선택지 텍스트">
+                <button onclick="removeChoice(${index})" class="del">🗑️</button>
             </div>
+            
             <div class="choice-result-group">
                 <label>결과 지문</label>
-                <textarea class="choiceResultText" placeholder="선택 후 플레이어에게 보일 내용">${choice.resultText || ''}</textarea>
+                <textarea class="choiceResultText" placeholder="선택 후 플레이어에게 보일 결과 지문">${choice.resultText || ''}</textarea>
             </div>
+
             <div class="choice-hp-group">
                 <label>HP 변화</label>
-                <input type="number" class="choiceHpChange" value="${choice.hpChange !== undefined ? choice.hpChange : 0}" placeholder="HP 변화량 (+/-)">
+                <input type="number" class="choiceHpChange" value="${choice.hpChange || 0}" placeholder="HP 변화량 (±)">
             </div>
+            
             <div class="choice-item-group">
-                <label>아이템</label>
-                <select class="choiceItemAction">
-                    <option value="none" ${choice.itemAction === 'none' ? 'selected' : ''}>없음</option>
-                    <option value="get" ${choice.itemAction === 'get' ? 'selected' : ''}>획득</option>
-                    <option value="consume" ${choice.itemAction === 'consume' ? 'selected' : ''}>소비</option>
+                <label>아이템 요구</label>
+                <select class="choiceItemRequirement">
+                    <option value="">(없음)</option>
+                    ${Object.keys(itemDefinitions).map(id => `<option value="${id}" ${choice.itemRequirement === id ? 'selected' : ''}>${itemDefinitions[id].name} (${id})</option>`).join('')}
                 </select>
-                <select class="choiceItemIdSelect" style="flex: 1;">
-                    <option value="" disabled>-- 아이템 선택 --</option>
-                    ${itemOptions}
+                <label>아이템 지급</label>
+                 <select class="choiceItemGive">
+                    <option value="">(없음)</option>
+                    ${Object.keys(itemDefinitions).map(id => `<option value="${id}" ${choice.itemGive === id ? 'selected' : ''}>${itemDefinitions[id].name} (${id})</option>`).join('')}
                 </select>
             </div>
+
             <div class="choice-trigger-group">
                 <label>트리거</label>
                 <select class="choiceTrigger">
@@ -1539,1101 +2241,278 @@ const renderChoices = (choices) => {
                 <input type="text" class="choiceData" value="${choice.data || ''}" placeholder="트리거 데이터(URL/맵명)">
             </div>
         `;
-        choicesDiv.appendChild(choiceDiv);
+
+        choicesContainer.appendChild(choiceDiv);
     });
-    // 선택지 삭제 함수를 window에 등록
-    window.removeChoice = removeChoice;
-};
-
-const removeChoice = (index) => {
-    if (editingEncounter) {
-        editingEncounter.data.choices.splice(index, 1);
-        renderChoices(editingEncounter.data.choices);
-    }
-};
-
-const getChoicesFromUI = () => {
-    const choices = [];
-    document.querySelectorAll('#choices .choice').forEach(choiceDiv => {
-        const itemAction = choiceDiv.querySelector('.choiceItemAction').value;
-        const itemId = choiceDiv.querySelector('.choiceItemIdSelect').value;
-        
-        choices.push({
-            text: choiceDiv.querySelector('.choiceText').value,
-            resultText: choiceDiv.querySelector('.choiceResultText').value,
-            hpChange: parseInt(choiceDiv.querySelector('.choiceHpChange').value) || 0,
-            itemAction: itemAction,
-            itemId: itemAction !== 'none' ? itemId : '',
-            trigger: choiceDiv.querySelector('.choiceTrigger').value,
-            data: choiceDiv.querySelector('.choiceData').value
-        });
-    });
-    return choices;
-};
-
-const saveEncEdit = () => {
-    if (!editingEncounter) return;
-
-    const newEncData = {
-        name: encNameInput.value.trim(),
-        text: encTextInput.value.trim(),
-        charUrl: encCharUrlInput.value.trim(),
-        itemId: encItemIdManualCheck.checked ? encItemIdManual.value.trim() : encItemIdSelect.value,
-        trigger: encTriggerSelect.value,
-        data: encDataInput.value.trim(),
-        choices: getChoicesFromUI()
-    };
     
-    // 조우 업데이트/추가
-    const existingIndex = encounterPoints.findIndex(p => p.x === editingEncounter.x && p.y === editingEncounter.y);
-    if (existingIndex > -1) {
-        encounterPoints[existingIndex].data = newEncData;
-        addLogItem(`시스템: 조우 (${editingEncounter.x}, ${editingEncounter.y}) 수정 완료.`, 'system');
-    } else {
-        // 새 조우 추가
-        encounterPoints.push({ x: editingEncounter.x, y: editingEncounter.y, data: newEncData });
-        addLogItem(`시스템: 조우 (${editingEncounter.x}, ${editingEncounter.y}) 추가 완료.`, 'system');
+    document.getElementById('choicesLabel').textContent = `선택지 (${choices.length}개)`;
+}
+
+/**
+ * 조우 수정 모달의 선택지 삭제
+ */
+window.removeChoice = (index) => {
+    const point = currentEdit.data;
+    if (point && point.choices) {
+        point.choices.splice(index, 1);
+        renderChoices(point.choices);
     }
+}
 
-    // DB에 저장
-    saveMap(); 
-    closeEditModal();
-    draw();
-};
+/**
+ * 관리자 패널의 탭 전환
+ */
+const switchAdminTab = (tabId) => {
+    document.querySelectorAll('.admin-tabs button').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.admin-tab-content').forEach(content => content.classList.remove('active'));
 
-const deleteEncEdit = () => {
-    if (!editingEncounter) return;
-    if (confirm('이 조우 지점을 삭제하시겠습니까?')) {
-        const index = encounterPoints.findIndex(p => p.x === editingEncounter.x && p.y === editingEncounter.y);
-        if (index > -1) {
-            encounterPoints.splice(index, 1);
-            addLogItem(`시스템: 조우 (${editingEncounter.x}, ${editingEncounter.y}) 삭제 완료.`, 'system');
-            
-            // DB에 저장
-            saveMap(); 
-            closeEditModal();
-            draw();
-        }
-    }
-};
-
-const triggerEncounter = async (encounter) => {
-    // 팝업 띄우기 (P3: 조우 팝업)
-    encModalName.textContent = encounter.data.name;
-    encModalText.textContent = encounter.data.text;
+    document.getElementById(`${tabId}Btn`).classList.add('active');
+    document.getElementById(`${tabId}Content`).classList.add('active');
     
-    // 이미지 처리
-    if (encounter.data.charUrl) {
-        encCharImg.src = encounter.data.charUrl;
-        encCharImg.style.display = 'block';
-        encCharImgContainer.style.display = 'flex';
-    } else {
-        encCharImg.style.display = 'none';
-        encCharImgContainer.style.display = 'none';
+    // 탭 전환 시 내용 갱신
+    if (tabId === 'userTab') {
+        fetchAllUsers(true);
+        fetchAllItems(false);
+    } else if (tabId === 'itemTab') {
+        fetchAllItems(true);
+    } else if (tabId === 'mapTab') {
+        reloadMapList();
     }
+}
 
-    // 선택지 처리
-    encounterChoicesDiv.innerHTML = '';
-    closeEncounterModalBtn.style.display = 'block'; // 기본은 '계속 진행' 버튼
+/**
+ * 아이템 정의 수정
+ */
+window.editItemDefinition = (itemId) => {
+    const item = itemDefinitions[itemId];
+    if (!item) return;
+
+    const newName = prompt(`아이템 [${itemId}]의 새 이름을 입력하세요:`, item.name);
+    if (newName === null) return;
     
-    if (encounter.data.choices && encounter.data.choices.length > 0) {
-        closeEncounterModalBtn.style.display = 'none'; // 선택지가 있으면 '계속 진행' 숨김
-        encounter.data.choices.forEach((choice, index) => {
-            const btn = document.createElement('button');
-            btn.textContent = choice.text;
-            btn.dataset.choiceIndex = index;
-            btn.onclick = () => {
-                handleChoice(choice, encounter.x, encounter.y); // 선택 처리
-            };
-            encounterChoicesDiv.appendChild(btn);
-        });
-    } else {
-        // 기본 트리거 처리 (선택지가 없을 때만 작동)
-        const hasItem = encounter.data.itemId;
-        
-        if (encounter.data.trigger === 'image' || hasItem) {
-            closeEncounterModalBtn.textContent = '닫기';
-            closeEncounterModalBtn.onclick = () => {
-                closeEncounterModal(true); // 팝업 닫기 후 트리거 데이터 처리
-                handleBasicTrigger(encounter.data.trigger, encounter.data.data, encounter.data.itemId);
-            };
-        } else if (encounter.data.trigger === 'map') {
-            closeEncounterModalBtn.textContent = '이동';
-            closeEncounterModalBtn.onclick = () => {
-                closeEncounterModal(true); // 팝업 닫기 후 트리거 데이터 처리
-                handleBasicTrigger(encounter.data.trigger, encounter.data.data, encounter.data.itemId);
-            };
-        } else {
-            closeEncounterModalBtn.textContent = '계속 진행';
-            closeEncounterModalBtn.onclick = () => {
-                closeEncounterModal(true); // 팝업 닫기 후 트리거 데이터 처리
-                handleBasicTrigger(encounter.data.trigger, encounter.data.data, encounter.data.itemId);
-            };
-        }
-    }
+    const newDesc = prompt(`아이템 [${itemId}]의 새 설명을 입력하세요:`, item.description);
+    if (newDesc === null) return;
     
-    encounterModalBg.style.display = 'flex';
-};
-
-const closeEncounterModal = (triggeredByChoice = false) => {
-    encounterModalBg.style.display = 'none';
+    const newUrl = prompt(`아이템 [${itemId}]의 새 이미지 URL을 입력하세요:`, item.imageUrl);
+    if (newUrl === null) return;
     
-    // 기본으로 돌려놓기
-    closeEncounterModalBtn.textContent = '계속 진행';
-    closeEncounterModalBtn.onclick = () => closeEncounterModal(false); 
-    
-    // 아이템 획득 로직이 이미 선택지/기본 트리거 처리에서 이루어졌으므로 여기서는 추가 작업 없음.
-    if (!triggeredByChoice) {
-        // 선택지나 기본 트리거 없이 '계속 진행'을 누른 경우 (아이템만 획득하는 조우)
-        const encounter = isEncounterPoint(player.x, player.y);
-        if (encounter && encounter.data.itemId) {
-            handleBasicTrigger('item', encounter.data.itemId);
-        }
-    }
-};
-
-const handleBasicTrigger = async (trigger, data, itemId = null) => {
-    // 트리거 데이터 처리 전에 아이템 획득 처리 (기본 조우 또는 선택지 후 처리)
-    if (itemId) {
-        await giveItemToPlayer(loggedInUserId, itemId, 1);
-        const itemName = itemDefinitions[itemId]?.name || itemId;
-        addLogItem(`아이템 [${itemName}]을(를) 획득했습니다.`, 'item');
-        updatePlayerUI(true);
-    }
-    
-    switch (trigger) {
-        case 'sound':
-            // 사운드 트리거 구현
-            addLogItem(`시스템: 사운드 트리거: ${data}`, 'system');
-            break;
-        case 'image':
-            // 이미지 팝업 트리거 구현 (P3: 조우 팝업 재사용)
-            if (data) {
-                encModalName.textContent = '이미지 팝업';
-                encModalText.textContent = '트리거 이미지';
-                encCharImg.src = data;
-                encCharImg.style.display = 'block';
-                encCharImgContainer.style.display = 'flex';
-                encounterChoicesDiv.innerHTML = '';
-                closeEncounterModalBtn.textContent = '닫기';
-                closeEncounterModalBtn.onclick = () => {
-                    encounterModalBg.style.display = 'none';
-                    // 기본으로 돌려놓기
-                    closeEncounterModalBtn.textContent = '계속 진행';
-                    closeEncounterModalBtn.onclick = () => closeEncounterModal(false);
-                };
-                encounterModalBg.style.display = 'flex';
-            }
-            break;
-        case 'map':
-            if (data) {
-                await loadMap(data);
-            }
-            break;
-    }
-};
-
-const handleChoice = async (choice, encX, encY) => {
-    // 선택지 처리 후 정보 화면 (P3: encounterModal 재사용)
-    encModalName.textContent = choice.text;
-    encModalText.textContent = choice.resultText || '선택에 따른 변화가 발생했습니다.';
-    encCharImg.style.display = 'none'; // 선택지는 이미지 끄기
-    encCharImgContainer.style.display = 'none';
-    encounterChoicesDiv.innerHTML = '';
-    
-    // HP 변화 처리
-    if (choice.hpChange !== undefined && choice.hpChange !== 0) {
-        const newHp = Math.min(Math.max(player.hp + choice.hpChange, 0), MAX_HP);
-        const hpChangeText = choice.hpChange > 0 ? `${choice.hpChange}만큼 회복` : `${Math.abs(choice.hpChange)}만큼 피해`;
-        
-        encModalText.textContent += `\n\n[HP ${hpChangeText}!]`; // 결과 지문에 HP 변화 추가
-        player.hp = newHp;
-        await updatePlayerFirestore(loggedInUserId, { hp: player.hp });
-        updatePlayerUI(true); // HP UI 업데이트
-    }
-
-    // 아이템 획득/소비 처리
-    if (choice.itemAction === 'get' && choice.itemId) {
-        await giveItemToPlayer(loggedInUserId, choice.itemId, 1);
-        const itemName = itemDefinitions[choice.itemId]?.name || choice.itemId;
-        encModalText.textContent += `\n\n[아이템 ${itemName}을(를) 획득했습니다.]`;
-        updatePlayerUI(true);
-    } else if (choice.itemAction === 'consume' && choice.itemId) {
-        const currentCount = player.inventory[choice.itemId] || 0;
-        if (currentCount > 0) {
-            await removeItemFromPlayer(loggedInUserId, choice.itemId, 1);
-            const itemName = itemDefinitions[choice.itemId]?.name || choice.itemId;
-            encModalText.textContent += `\n\n[아이템 ${itemName}을(를) 사용했습니다.]`;
-            updatePlayerUI(true);
-        } else {
-            // 아이템이 없으면 아무 일도 일어나지 않음 (선택지가 비활성화되어야 하지만, DB 동기화 문제로 인한 안전장치)
-            encModalText.textContent += '\n\n[아이템이 없어 아무 일도 일어나지 않았습니다.]';
-        }
-    }
-    
-    // 트리거 처리
-    const trigger = choice.trigger;
-    const data = choice.data;
-
-    // 선택지 후 "계속 진행" 버튼은 항상 닫기 + 트리거 실행 기능 포함
-    closeEncounterModalBtn.textContent = '계속 진행';
-    closeEncounterModalBtn.onclick = () => {
-        encounterModalBg.style.display = 'none';
-        handleBasicTrigger(trigger, data); // 선택지 트리거 실행
-        
-        // 버튼 상태 초기화
-        closeEncounterModalBtn.textContent = '계속 진행';
-        closeEncounterModalBtn.onclick = () => closeEncounterModal(false);
-    };
-
-    // 모달 다시 띄우기 (정보 화면)
-    encounterModalBg.style.display = 'flex';
-};
-
-
-/* --- Player/Movement Logic --- */
-
-const updatePlayerPosition = async (newX, newY) => {
-    if (checkImpassable(newX, newY)) {
-        addLogItem('시스템: 이동 제한 구역입니다.', 'system');
-        return;
-    }
-
-    player.x = newX;
-    player.y = newY;
-    
-    // DB 업데이트
-    await updatePlayerFirestore(loggedInUserId, { x: player.x, y: player.y, mapName: currentMapName });
-    localStorage.setItem('playerX', player.x);
-    localStorage.setItem('playerY', player.y);
-    localStorage.setItem('currentMap', currentMapName);
-
-    // 맵 이동 체크
-    if (mapData.transitionX !== null && mapData.transitionY !== null && 
-        player.x === mapData.transitionX && player.y === mapData.transitionY) {
-        
-        if (mapData.nextMapName) {
-            addLogItem(`시스템: 맵 클리어! [${mapData.nextMapName}]으로 이동합니다.`, 'system');
-            await loadMap(mapData.nextMapName);
-        } else {
-            addLogItem('시스템: 다음 맵이 설정되지 않았습니다.', 'system');
-        }
-        return;
-    }
-
-    // 조우 체크
-    const encounter = isEncounterPoint(player.x, player.y);
-    if (encounter) {
-        const key = getCoordKey(player.x, player.y);
-        if (!player.encountered[key]) {
-            await triggerEncounter(encounter);
-            player.encountered[key] = true;
-            // DB에 조우 기록 업데이트
-            await updatePlayerFirestore(loggedInUserId, { [`encountered.${key}`]: true });
-        }
-    }
-    
-    draw(); // 이동 후 화면 갱신
-};
-
-const usersCollection = collection(db, 'users');
-
-const updatePlayerFirestore = async (playerId, data) => {
-    try {
-        const userRef = doc(usersCollection, playerId);
-        await setDoc(userRef, data, { merge: true });
-    } catch (e) {
-        console.error("Error updating player:", e);
-        addLogItem(`시스템: 플레이어 데이터 DB 업데이트 실패.`, 'system');
-    }
-};
-
-const loadPlayerFromFirestore = async (playerId) => {
-    try {
-        const docRef = doc(usersCollection, playerId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            player.x = data.x || mapData.startX;
-            player.y = data.y || mapData.startY;
-            player.hp = data.hp !== undefined ? data.hp : MAX_HP;
-            player.charUrl = data.charUrl || '';
-            player.inventory = data.inventory || {};
-            player.encountered = data.encountered || {};
-
-            // 맵 불일치 시 현재 맵으로 강제 이동
-            if (data.mapName && data.mapName !== currentMapName) {
-                addLogItem(`시스템: 플레이어가 [${data.mapName}]에 있습니다. 해당 맵으로 이동합니다.`, 'system');
-                await loadMap(data.mapName); // 맵을 로드하고 그 맵의 시작 위치로 이동 처리
-            } else {
-                 // 맵이 같거나 맵 데이터가 없으면 로컬 위치 사용 후 DB 업데이트
-                localStorage.setItem('playerX', player.x);
-                localStorage.setItem('playerY', player.y);
-                localStorage.setItem('currentMap', currentMapName);
-                await updatePlayerFirestore(playerId, { x: player.x, y: player.y, mapName: currentMapName });
-            }
-            
-            loggedInUserId = playerId;
-            player.id = playerId;
-            localStorage.setItem('playerId', playerId);
-            chatNicknameInput.value = playerId;
-            updatePlayerUI(true);
-            draw();
-            addLogItem(`시스템: 플레이어 [${playerId}] 로그인 완료.`, 'system');
-            return true;
-        } else {
-            addLogItem(`시스템: 플레이어 ID [${playerId}]를 찾을 수 없습니다.`, 'system');
-            return false;
-        }
-    } catch (e) {
-        console.error("플레이어 로드 실패:", e);
-        addLogItem(`시스템: 플레이어 로드 중 오류 발생 (${playerId}).`, 'system');
-        return false;
-    }
-};
-
-const playerLogout = () => {
-    loggedInUserId = null;
-    player = { x: 0, y: 0, hp: MAX_HP, charUrl: '', inventory: {}, encountered: {} };
-    localStorage.removeItem('playerId');
-    localStorage.removeItem('playerX');
-    localStorage.removeItem('playerY');
-    playerLoginBox.style.display = 'none';
-    chatNicknameInput.disabled = false;
-    chatNicknameInput.value = '탐험가';
-    updatePlayerUI(false);
-    draw();
-    addLogItem('시스템: 플레이어 로그아웃 완료.', 'system');
-};
-
-/* --- Item Logic --- */
-
-const showItemUseModal = (itemId, itemData) => {
-    if (!loggedInUserId) return;
-    currentItem = { id: itemId, data: itemData };
-    
-    itemUseName.textContent = itemData.name;
-    itemUseImage.src = itemData.imageUrl || 'https://via.placeholder.com/80x80.png?text=Item';
-    itemUseDescription.textContent = itemData.description;
-    
-    // HP 회복량이 0이거나 HP가 MAX면 사용 버튼 비활성화
-    useItemBtn.disabled = itemData.hpRecover === 0 || player.hp >= MAX_HP;
-
-    itemUseModalBg.style.display = 'flex';
-};
-
-const closeItemUseModalFunc = () => { // 이름 충돌 방지를 위해 Func 추가
-    currentItem = null;
-    itemUseModalBg.style.display = 'none';
-};
-
-// P7: 아이템 사용 시 수량 1 감소 로직 추가
-const useItem = async () => {
-    if (!loggedInUserId || !currentItem) return;
-    
-    const itemId = currentItem.id;
-    const itemData = currentItem.data;
-    const count = player.inventory[itemId] || 0;
-
-    if (count <= 0) {
-        alert('아이템이 없습니다.');
-        closeItemUseModalFunc();
-        return;
-    }
-    
-    if (player.hp >= MAX_HP) {
-        alert('HP가 이미 최대치입니다.');
-        closeItemUseModalFunc();
-        return;
-    }
-
-    if (itemData.hpRecover > 0) {
-        const newHp = Math.min(player.hp + itemData.hpRecover, MAX_HP);
-        const hpGained = newHp - player.hp;
-        
-        player.hp = newHp;
-        await updatePlayerFirestore(loggedInUserId, { hp: player.hp });
-        
-        addLogItem(`${player.id}가 아이템 [${itemData.name}]을(를) 사용하여 HP를 ${hpGained}만큼 회복했습니다. (현재 HP: ${player.hp})`, 'item');
-        
-        // P7: 아이템 사용 시 인벤토리에서 아이템 1개 삭제
-        await removeItemFromPlayer(loggedInUserId, itemId, 1); 
-        
-        closeItemUseModalFunc();
-        updatePlayerUI(true); // UI 갱신
-        
-    } else {
-        alert('사용할 수 없는 아이템입니다.');
-    }
-};
-
-const removeItemFromPlayer = async (playerId, itemId, count) => {
-    // 플레이어의 로컬/DB 인벤토리에서 아이템 제거
-    const currentCount = allUsers[playerId]?.inventory[itemId] || 0;
-    const newCount = Math.max(0, currentCount - count);
-    
-    if (playerId in allUsers) {
-        const userRef = doc(db, 'users', playerId);
-        
-        if (newCount > 0) {
-            await updateDoc(userRef, {
-                [`inventory.${itemId}`]: newCount
-            });
-            allUsers[playerId].inventory[itemId] = newCount;
-        } else {
-            // 수량이 0이 되면 필드 자체를 삭제
-            const updatedInventory = { ...allUsers[playerId].inventory };
-            delete updatedInventory[itemId];
-            await updateDoc(userRef, { inventory: updatedInventory });
-            allUsers[playerId].inventory = updatedInventory;
-        }
-        
-        // 로컬 player 객체 업데이트 (플레이어 로그인 상태일 경우)
-        if (playerId === loggedInUserId) {
-             if (newCount > 0) {
-                player.inventory[itemId] = newCount;
-             } else {
-                delete player.inventory[itemId];
-             }
-        }
-    }
-    await fetchAllUsers(true); // 전체 사용자 목록 갱신 (관리자 UI 갱신 포함)
-};
-
-const giveItemToPlayer = async (playerId, itemId, count) => {
-    if (!itemDefinitions[itemId]) {
-        addLogItem(`시스템: 아이템 정의에 [${itemId}]가 없습니다.`, 'system');
-        return;
-    }
-    
-    if (playerId in allUsers) {
-        const userRef = doc(usersCollection, playerId);
-        const newCount = (allUsers[playerId].inventory[itemId] || 0) + count;
-        
-        await updateDoc(userRef, {
-            [`inventory.${itemId}`]: newCount
-        });
-        
-        // 로컬 allUsers 및 player 객체 업데이트
-        allUsers[playerId].inventory[itemId] = newCount;
-        if (playerId === loggedInUserId) {
-            player.inventory[itemId] = newCount;
-        }
-        
-        addLogItem(`시스템: [${playerId}]에게 [${itemDefinitions[itemId].name}] ${count}개를 지급했습니다.`, 'item');
-        await fetchAllUsers(true); // 전체 사용자 목록 갱신 (관리자 UI 갱신 포함)
-    } else {
-        addLogItem(`시스템: 플레이어 [${playerId}]를 찾을 수 없습니다.`, 'system');
-    }
-};
-
-const itemDefinitionCollection = collection(db, 'itemDefinitions');
-const fetchAllItems = async (updateUI = false) => {
-    try {
-        const q = query(itemDefinitionCollection);
-        const querySnapshot = await getDocs(q);
-        itemDefinitions = {};
-        querySnapshot.forEach((doc) => {
-            itemDefinitions[doc.id] = doc.data();
-        });
-        
-        if (updateUI) {
-            renderItemDefinitions();
-        }
-        
-    } catch (e) {
-        console.error("아이템 정의 로드 실패:", e);
-        addLogItem("시스템: 아이템 정의 로드 중 오류 발생.", 'system');
-    }
-};
-
-const addItemDefinition = async () => {
-    if (!isAdminMode) return;
-    const itemId = newItemIdInput.value.trim();
-    const itemName = newItemNameInput.value.trim();
-    const itemUrl = newItemImageUrlInput.value.trim();
-    const hpRecover = parseInt(newItemHpRecoverInput.value) || 0;
-    const description = newItemDescriptionInput.value.trim();
-
-    if (!itemId || !itemName) {
-        alert('아이템 ID와 이름을 입력해주세요.');
-        return;
-    }
-    
-    if (itemDefinitions[itemId]) {
-        if (!confirm(`아이템 ID [${itemId}]가 이미 존재합니다. 덮어쓰시겠습니까?`)) {
-            return;
-        }
-    }
+    const newHpRecover = parseInt(prompt(`아이템 [${itemId}]의 HP 회복량을 입력하세요:`, item.hpRecover));
+    if (isNaN(newHpRecover)) return;
 
     try {
-        await setDoc(doc(itemDefinitionCollection, itemId), {
-            name: itemName,
-            imageUrl: itemUrl,
-            hpRecover: hpRecover,
-            description: description
+        const itemDocRef = doc(db, "items", itemId);
+        setDoc(itemDocRef, {
+            name: newName,
+            description: newDesc,
+            imageUrl: newUrl,
+            hpRecover: newHpRecover
+        }, { merge: true }).then(() => {
+            addLogItem(`시스템: 아이템 정의 [${itemId}] 수정 완료.`, 'system');
+            fetchAllItems(true);
         });
-        
-        addLogItem(`시스템: 아이템 [${itemName}] 등록/수정 완료.`, 'system');
-        newItemIdInput.value = '';
-        newItemNameInput.value = '';
-        newItemImageUrlInput.value = '';
-        newItemHpRecoverInput.value = 0;
-        newItemDescriptionInput.value = '';
-        
-        await fetchAllItems(true);
     } catch (e) {
-        console.error("아이템 등록 실패:", e);
-        addLogItem("시스템: 아이템 등록 중 오류 발생.", 'system');
+        console.error("Error updating item: ", e);
+        addLogItem("시스템: 아이템 정의 수정 실패.", 'system');
     }
-};
+}
 
-const deleteItemDefinition = async (itemId) => {
-    if (!isAdminMode) return;
-    if (confirm(`정말로 아이템 정의 [${itemId}]을(를) 삭제하시겠습니까?`)) {
+/**
+ * 아이템 정의 삭제
+ */
+window.deleteItemDefinition = (itemId) => {
+    if (confirm(`아이템 정의 [${itemId}]를 삭제하시겠습니까? 플레이어 인벤토리의 해당 아이템도 함께 삭제됩니다.`)) {
         try {
-            await deleteDoc(doc(itemDefinitionCollection, itemId));
-            addLogItem(`시스템: 아이템 정의 [${itemId}] 삭제 완료.`, 'system');
-            
-            await fetchAllItems(true);
-        } catch (e) {
-            console.error("아이템 삭제 실패:", e);
-            addLogItem(`시스템: 아이템 삭제 중 오류 발생 (${itemId}).`, 'system');
-        }
-    }
-};
-// 맵 목록에서 삭제 버튼 이벤트가 작동하도록 window에 등록
-window.deleteItemDefinition = deleteItemDefinition;
-
-/* --- UI Rendering / Update Functions --- */
-
-const updateAdminRightInfo = (users) => {
-    // 맵 정보 업데이트
-    adminInfoMapSpan.textContent = currentMapName;
-    adminInfoRemainingEncSpan.textContent = encounterPoints.length;
-
-    // 현재 맵 플레이어 목록 (관리자용)
-    const playerOnMapList = document.getElementById('playerOnMapList');
-    playerOnMapList.innerHTML = ''; 
-    
-    // 플레이어 목록에는 자신 제외, 현재 맵에 있는 플레이어만 표시
-    const playersOnCurrentMap = users.filter(u => u.mapName === currentMapName && u.id !== loggedInUserId);
-    
-    if (playersOnCurrentMap.length === 0) {
-        playerOnMapList.innerHTML = '<div style="text-align: center; color: #aaa; font-size: 13px;">플레이어 없음</div>';
-    } else {
-        playersOnCurrentMap.forEach(p => {
-            const item = document.createElement('div');
-            item.className = 'player-on-map-item';
-            // 관리자 모드: 인벤토리 정보 포함 (기존 로직 유지)
-            const inventorySummary = Object.keys(p.inventory).map(itemId => {
-                const count = p.inventory[itemId];
-                const name = itemDefinitions[itemId]?.name || '알 수 없음';
-                return `${name} x${count}`;
-            }).join(', ');
-            
-            // 인벤토리 보기 버튼 추가
-            item.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <strong>${p.id}</strong> (HP: ${p.hp})
-                    <button style="padding: 2px 5px; font-size: 10px;" onclick="window.showUserInventory('${p.id}')">인벤토리 보기</button>
-                </div>
-                <small>Inv: ${inventorySummary || '없음'}</small>
-            `;
-            playerOnMapList.appendChild(item);
-        });
-    }
-
-    // P2: 현재 맵 플레이어 목록 (플레이어 모드용) 업데이트
-    const playerMapPlayerList = document.getElementById('playerMapPlayerList');
-    playerMapPlayerList.innerHTML = '';
-    
-    if (loggedInUserId && document.getElementById('playerContent').style.display !== 'none') {
-        const allPlayersOnCurrentMap = users.filter(u => u.mapName === currentMapName && u.id !== loggedInUserId);
-        
-        if (allPlayersOnCurrentMap.length === 0) {
-            playerMapPlayerList.innerHTML = '<div style="text-align: center; color: #aaa; font-size: 13px;">다른 플레이어 없음</div>';
-        } else {
-            allPlayersOnCurrentMap.forEach(p => {
-                const item = document.createElement('div');
-                item.className = 'player-on-map-item'; // CSS 재활용
-                item.innerHTML = `<strong>${p.id}</strong>`; // P2: 이름만
-                playerMapPlayerList.appendChild(item);
+            deleteDoc(doc(db, "items", itemId)).then(() => {
+                addLogItem(`시스템: 아이템 정의 [${itemId}] 삭제 완료.`, 'system');
+                fetchAllItems(true);
             });
-        }
-    }
-};
-
-// 플레이어 인벤토리 모달 표시 (관리자 기능)
-window.showUserInventory = (playerId) => {
-    if (!isAdminMode) return;
-
-    const user = allUsers[playerId];
-    if (!user) {
-        alert('플레이어 정보를 찾을 수 없습니다.');
-        return;
-    }
-
-    document.getElementById('inventoryModalTitle').textContent = `${playerId}의 인벤토리`;
-    inventoryModalList.innerHTML = '';
-    const items = user.inventory;
-    const itemIds = Object.keys(items);
-
-    if (itemIds.length === 0) {
-        inventoryModalList.innerHTML = '<div style="text-align: center; color: #aaa; padding: 10px;">인벤토리가 비어 있습니다.</div>';
-    } else {
-        itemIds.forEach(itemId => {
-            const count = items[itemId];
-            if (count > 0) {
-                const itemData = itemDefinitions[itemId] || { name: itemId, description: '알 수 없는 아이템' };
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'inventory-admin-item list-item';
-                itemDiv.innerHTML = `
-                    <span><strong>${itemData.name}</strong> (x${count})<br><small style="color: #aaa;">${itemData.description}</small></span>
-                    <div style="gap: 5px;">
-                        <button style="background: #2ecc71; border-color: #27ae60;" onclick="window.giveAdminItem('${playerId}', '${itemId}')">+</button>
-                        <button style="background: #e74c3c; border-color: #c0392b;" onclick="window.removeAdminItem('${playerId}', '${itemId}')">-</button>
-                    </div>
-                `;
-                inventoryModalList.appendChild(itemDiv);
-            }
-        });
-    }
-
-    inventoryModal.style.display = 'flex';
-};
-
-// 인벤토리 모달에서 아이템 추가/제거를 위한 전역 함수 등록
-window.giveAdminItem = async (playerId, itemId) => {
-    if (confirm(`${playerId}에게 아이템 [${itemDefinitions[itemId]?.name || itemId}] 1개를 지급하시겠습니까?`)) {
-        await giveItemToPlayer(playerId, itemId, 1);
-        // DB 업데이트 후 다시 인벤토리 팝업을 열어 갱신
-        window.showUserInventory(playerId); 
-    }
-};
-
-window.removeAdminItem = async (playerId, itemId) => {
-    if (confirm(`${playerId}에게서 아이템 [${itemDefinitions[itemId]?.name || itemId}] 1개를 제거하시겠습니까?`)) {
-        await removeItemFromPlayer(playerId, itemId, 1);
-        // DB 업데이트 후 다시 인벤토리 팝업을 열어 갱신
-        window.showUserInventory(playerId); 
-    }
-};
-
-
-const renderItemDefinitions = () => {
-    itemListContainer.innerHTML = '';
-    
-    // Select 박스 업데이트
-    encItemIdSelect.innerHTML = '<option value="">(없음) - 아이템 획득 안 함</option>';
-    giveItemSelect.innerHTML = '<option value="">--선택--</option>';
-
-    Object.keys(itemDefinitions).forEach(itemId => {
-        const item = itemDefinitions[itemId];
-        
-        // 목록
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'list-item';
-        itemDiv.innerHTML = `
-            <span><strong>${item.name}</strong> (${itemId}) - HP:${item.hpRecover}</span>
-            <div>
-                <button class="del" onclick="deleteItemDefinition('${itemId}')">삭제</button>
-            </div>
-        `;
-        itemListContainer.appendChild(itemDiv);
-
-        // 선택 박스 (조우)
-        const encOption = document.createElement('option');
-        encOption.value = itemId;
-        encOption.textContent = `${item.name} (${itemId})`;
-        encItemIdSelect.appendChild(encOption);
-
-        // 선택 박스 (지급)
-        const giveOption = document.createElement('option');
-        giveOption.value = itemId;
-        giveOption.textContent = `${item.name} (${itemId})`;
-        giveItemSelect.appendChild(giveOption);
-    });
-};
-
-const renderUserList = (users) => {
-    userList.innerHTML = '';
-    users.forEach(user => {
-        const item = document.createElement('div');
-        item.className = 'list-item';
-        const mapInfo = user.mapName ? `${user.mapName} (${user.x}, ${user.y})` : '위치 정보 없음';
-        item.innerHTML = `
-            <span><strong>${user.id}</strong> (HP: ${user.hp})<br><small style="color:#aaa;">맵: ${mapInfo}</small></span>
-            <div style="gap: 5px;">
-                <button onclick="window.showUserInventory('${user.id}')" style="font-size: 10px; padding: 4px 6px;">인벤토리</button>
-                <button class="del" onclick="deletePlayer('${user.id}')">삭제</button>
-            </div>
-        `;
-        userList.appendChild(item);
-    });
-    // 인벤토리 보기 기능을 위해 window에 함수 등록
-    window.deletePlayer = deletePlayer;
-};
-
-
-/* --- Firebase Listeners and Login/Logout --- */
-
-const chatCollection = collection(db, 'chats');
-onSnapshot(query(chatCollection, orderBy('timestamp', 'asc'), limit(200)), (snapshot) => {
-    logDisplay.innerHTML = ''; // 채팅 전체 초기화 후 다시 그리기
-    snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-            const data = change.doc.data();
-            addChatItem(change.doc.id, data.nickname, data.message, data.timestamp, data.isAdmin);
-        }
-        // "removed"나 "modified"에 대한 처리는 현재 단순화 (전체 다시 그리기)
-    });
-});
-
-const fetchAllUsers = async (updateUI = false) => {
-    try {
-        const q = query(usersCollection);
-        const querySnapshot = await getDocs(q);
-        allUsers = {};
-        const userArray = [];
-        
-        // Select 박스 초기화
-        selectPlayerId.innerHTML = '<option value="">--선택--</option>';
-        selectPlayerIdMap.innerHTML = '<option value="">--선택--</option>';
-        giveItemPlayerSelect.innerHTML = '<option value="">--선택--</option>';
-        
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            data.id = doc.id;
-            // 인벤토리 초기화 (undefine 방지)
-            data.inventory = data.inventory || {}; 
-            allUsers[doc.id] = data;
-            userArray.push(data);
-            
-            // Select 박스 업데이트
-            const opt = document.createElement('option');
-            opt.value = doc.id;
-            opt.textContent = doc.id;
-            
-            selectPlayerId.appendChild(opt.cloneNode(true));
-            selectPlayerIdMap.appendChild(opt.cloneNode(true));
-            giveItemPlayerSelect.appendChild(opt.cloneNode(true));
-        });
-        
-        if (updateUI) {
-            renderUserList(userArray);
-            updateAdminRightInfo(userArray);
-        }
-        
-    } catch (e) {
-        console.error("사용자 로드 실패:", e);
-        addLogItem("시스템: 사용자 목록 로드 중 오류 발생.", 'system');
-    }
-};
-
-const adminLogin = async () => {
-    const password = adminPwInput.value;
-    try {
-        await signInWithEmailAndPassword(auth, ADMIN_EMAIL, password);
-        loginBox.style.display = 'none';
-        adminPwInput.value = '';
-        // onAuthStateChanged에서 updateAdminUI(true) 호출됨
-    } catch (error) {
-        console.error("Admin Login Failed:", error);
-        alert("관리자 로그인 실패: 비밀번호를 확인하세요.");
-        adminPwInput.value = '';
-    }
-};
-
-const adminLogout = async () => {
-    try {
-        await signOut(auth);
-        updateAdminUI(false);
-        addLogItem('시스템: 관리자 로그아웃 완료.', 'system');
-    } catch (error) {
-        console.error("Admin Logout Failed:", error);
-    }
-};
-
-const playerLogin = async (playerId) => {
-    const success = await loadPlayerFromFirestore(playerId);
-    if (success) {
-        playerLoginBox.style.display = 'none';
-    } else {
-        // loadPlayerFromFirestore에서 실패 메시지 출력되므로 여기서는 생략
-    }
-    playerIdInput.value = '';
-};
-
-const addPlayer = async () => {
-    if (!isAdminMode) return;
-    const playerId = newUserId.value.trim();
-    const charUrl = newUserCharUrl.value.trim();
-
-    if (!playerId) {
-        alert('플레이어 ID를 입력해주세요.');
-        return;
-    }
-
-    if (allUsers[playerId]) {
-        alert('이미 존재하는 ID입니다.');
-        return;
-    }
-    
-    try {
-        const userData = {
-            hp: MAX_HP,
-            x: mapData.startX,
-            y: mapData.startY,
-            mapName: currentMapName,
-            charUrl: charUrl || 'https://via.placeholder.com/32x32.png?text=P',
-            inventory: {},
-            encountered: {}
-        };
-        await setDoc(doc(usersCollection, playerId), userData);
-        addLogItem(`시스템: 플레이어 [${playerId}] 생성 완료.`, 'system');
-        newUserId.value = '';
-        newUserCharUrl.value = '';
-        await fetchAllUsers(true);
-    } catch (e) {
-        console.error("플레이어 생성 실패:", e);
-        addLogItem("시스템: 플레이어 생성 중 오류 발생.", 'system');
-    }
-};
-
-const deletePlayer = async (playerId) => {
-    if (!isAdminMode) return;
-    if (confirm(`정말로 플레이어 [${playerId}]를 삭제하시겠습니까?`)) {
-        try {
-            await deleteDoc(doc(usersCollection, playerId));
-            addLogItem(`시스템: 플레이어 [${playerId}] 삭제 완료.`, 'system');
-            
-            // 삭제된 플레이어가 현재 로그인된 플레이어인 경우 로그아웃 처리
-            if (loggedInUserId === playerId) {
-                playerLogout();
-            }
-            
-            await fetchAllUsers(true);
         } catch (e) {
-            console.error("플레이어 삭제 실패:", e);
-            addLogItem(`시스템: 플레이어 삭제 중 오류 발생 (${playerId}).`, 'system');
+            console.error("Error deleting item: ", e);
+            addLogItem("시스템: 아이템 정의 삭제 실패.", 'system');
         }
     }
-};
+}
 
-const updatePlayerStatus = async () => {
-    if (!isAdminMode) return;
-    const playerId = selectPlayerId.value;
-    const hp = parseInt(playerHpInput.value);
-
-    if (!playerId) {
-        alert('플레이어를 선택해주세요.');
-        return;
+/**
+ * 플레이어 계정 삭제
+ */
+window.deletePlayer = (userId) => {
+    if (confirm(`플레이어 계정 [${userId}]를 삭제하시겠습니까? 모든 데이터가 영구히 삭제됩니다.`)) {
+        try {
+            deleteDoc(doc(db, "players", userId)).then(() => {
+                addLogItem(`시스템: 플레이어 계정 [${userId}] 삭제 완료.`, 'system');
+                fetchAllUsers(true);
+            });
+        } catch (e) {
+            console.error("Error deleting player: ", e);
+            addLogItem("시스템: 플레이어 계정 삭제 실패.", 'system');
+        }
     }
+}
 
-    if (isNaN(hp) || hp < 0) {
-        alert('유효한 HP를 입력해주세요.');
-        return;
+/**
+ * 플레이어의 관리자 권한 토글 (글로벌 스코프)
+ */
+window.toggleAdmin = async (userId) => {
+    const user = allUsers[userId];
+    if (!user) return;
+
+    const isAdmin = user.isAdmin || false;
+    const action = isAdmin ? '회수' : '부여';
+
+    if (confirm(`${userId}에게 관리자 권한을 ${action}하시겠습니까?`)) {
+        try {
+            await updateDoc(doc(db, "players", userId), {
+                isAdmin: !isAdmin
+            });
+            addLogItem(`시스템: ${userId}의 관리자 권한을 ${action}했습니다.`, 'system');
+            fetchAllUsers(true); // 목록 갱신
+        } catch (e) {
+            console.error("Error toggling admin status: ", e);
+            addLogItem("시스템: 관리자 권한 토글 실패.", 'system');
+        }
     }
+}
 
-    try {
-        await updatePlayerFirestore(playerId, { hp: hp });
-        addLogItem(`시스템: [${playerId}]의 HP를 ${hp}로 변경.`, 'system');
-        await fetchAllUsers(true);
-    } catch (e) {
-        console.error("상태 업데이트 실패:", e);
-        addLogItem("시스템: 플레이어 상태 업데이트 중 오류 발생.", 'system');
-    }
-};
-
-const updatePlayerMap = async () => {
-    if (!isAdminMode) return;
-    const playerId = selectPlayerIdMap.value;
-    const mapName = playerMapInput.value.trim();
-    const x = parseInt(playerXInput.value);
-    const y = parseInt(playerYInput.value);
-
-    if (!playerId || !mapName || isNaN(x) || isNaN(y) || x < 0 || y < 0) {
-        alert('플레이어, 맵 이름, 유효한 X/Y 좌표를 입력해주세요.');
-        return;
-    }
-
-    try {
-        await updatePlayerFirestore(playerId, { mapName: mapName, x: x, y: y });
-        addLogItem(`시스템: [${playerId}]의 위치를 맵 ${mapName} (${x}, ${y})로 변경.`, 'system');
-        await fetchAllUsers(true);
-    } catch (e) {
-        console.error("위치 업데이트 실패:", e);
-        addLogItem("시스템: 플레이어 위치 업데이트 중 오류 발생.", 'system');
-    }
-};
-
-const handleGiveItem = async () => {
-    if (!isAdminMode) return;
-    const playerId = giveItemPlayerSelect.value;
-    const itemId = giveItemSelect.value;
-
-    if (!playerId || !itemId) {
-        alert('플레이어와 아이템을 선택해주세요.');
-        return;
-    }
-
-    await giveItemToPlayer(playerId, itemId, 1);
-};
-
-
-/* --- Event Listeners --- */
+/* --- Event Handlers --- */
 
 const initEventListeners = () => {
-    // P5: 로그인 창 바깥 클릭 시 닫기
-    const closeModalOnOutsideClick = (event, modalBgId) => {
-        const modalBg = document.getElementById(modalBgId);
-        // 모달 배경을 직접 클릭했을 때만 닫기
-        // 버튼 등 내부 요소를 눌렀을 때는 닫히지 않도록 수정
-        if (event.target === modalBg) { 
-            modalBg.style.display = 'none';
-            // 관리자 로그인 창은 비밀번호 초기화
-            if (modalBgId === 'loginBox') {
-                adminPwInput.value = '';
+    // Canvas Click (Move)
+    canvas.addEventListener('click', async (e) => {
+        if (!loggedInUserId || !playerMode) return; 
+
+        // 클릭된 위치의 GRID 좌표
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+        const targetX = Math.floor(clickX / GRID);
+        const targetY = Math.floor(clickY / GRID);
+
+        // 플레이어 이동 (대각선 불가, 한 칸만 이동 가능)
+        const dx = Math.abs(targetX - player.x);
+        const dy = Math.abs(targetY - player.y);
+
+        if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+            // 이동 불가 지점 확인
+            if (isImpassable(targetX, targetY)) {
+                addLogItem("시스템: 이동 불가 지역입니다.", 'system');
+                return;
             }
+
+            // 이동 처리
+            await setPlayerPosition(currentMapName, targetX, targetY);
+
+            // 이동 후 조우 확인
+            checkEncounter(targetX, targetY);
+
+        } else if (dx === 0 && dy === 0) {
+            // 같은 위치 클릭 시 조우 재확인
+             checkEncounter(targetX, targetY);
+        } else {
+             addLogItem("시스템: 한 칸씩만 이동할 수 있습니다.", 'system');
         }
-    };
+    });
 
-    loginBox.addEventListener('click', (event) => closeModalOnOutsideClick(event, 'loginBox'));
-    playerLoginBox.addEventListener('click', (event) => closeModalOnOutsideClick(event, 'playerLoginBox'));
-    inventoryModal.addEventListener('click', (event) => closeModalOnOutsideClick(event, 'inventoryModal'));
-    itemUseModalBg.addEventListener('click', (event) => closeModalOnOutsideClick(event, 'itemUseModalBg'));
-    encounterModalBg.addEventListener('click', (event) => closeModalOnOutsideClick(event, 'encounterModalBg'));
-    editModalBg.addEventListener('click', (event) => closeModalOnOutsideClick(event, 'editModal')); // 관리자 모달도 외부 클릭 닫기
 
-    // 관리자 버튼
+    // Admin Login/Logout
     adminBtn.addEventListener('click', () => {
-        if (isAdminMode) {
-            adminLogout();
+        if (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL) {
+            signOut(auth);
+            updateAdminUI(false);
+            addLogItem("시스템: 관리자 로그아웃.", 'system');
         } else {
             loginBox.style.display = 'flex';
         }
     });
 
-    // **[로그인 버튼 수정]** 관리자 로그인 버튼 이벤트
-    loginBtn.addEventListener('click', adminLogin);
-    adminPwInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            adminLogin();
+    loginBtn.addEventListener('click', () => {
+        const pw = adminPwInput.value;
+        if (pw === ADMIN_DUMMY_PW) {
+             // 더미 비밀번호로 로그인 시도 (Firebase Auth 사용)
+            signInWithEmailAndPassword(auth, ADMIN_EMAIL, pw)
+                .then(() => {
+                    // Firebase Auth State Observer가 UI 업데이트를 처리함
+                    loginBox.style.display = 'none';
+                    adminPwInput.value = '';
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    alert(`로그인 실패: ${errorMessage}`);
+                    addLogItem("시스템: 관리자 로그인 실패.", 'system');
+                });
+        } else {
+            alert('비밀번호가 일치하지 않습니다.');
         }
     });
 
-    // 플레이어 로그인/로그아웃 버튼
+    // Player Login/Logout
     playerLoginBtnTop.addEventListener('click', () => {
-        if (loggedInUserId) {
-            playerLogout();
+        if (playerMode) {
+            // 플레이어 로그아웃
+            updatePlayerUI(false);
+            addLogItem("시스템: 플레이어 로그아웃.", 'system');
         } else {
+            // 플레이어 로그인 모달 표시
             playerLoginBox.style.display = 'flex';
         }
     });
 
-    // **[로그인 버튼 수정]** 플레이어 로그인 버튼 이벤트
-    playerLoginBtnSubmit.addEventListener('click', () => {
-        const playerId = playerIdInput.value.trim();
-        if (playerId) {
-            playerLogin(playerId);
-        } else {
-            alert('플레이어 아이디를 입력하세요.');
-        }
-    });
-    playerIdInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const playerId = playerIdInput.value.trim();
-            if (playerId) {
-                playerLogin(playerId);
-            } else {
-                alert('플레이어 아이디를 입력하세요.');
-            }
-        }
-    });
-    
-    // P6: 키다운 이벤트 (영타 이동 금지 및 화살표 키만 허용)
-    document.addEventListener('keydown', async (event) => {
-        // 입력 필드에 포커스가 있으면 이동 막기
-        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.tagName === 'SELECT') {
-            return; 
-        }
-
-        // 로그인 상태가 아니거나 모달이 열려있거나 관리자 모드이면 이동 금지
-        if (!loggedInUserId || isModalOpen() || isAdminMode) {
+    playerLoginBtnSubmit.addEventListener('click', async () => {
+        const userId = playerIdInput.value.trim();
+        if (!userId) {
+            alert('아이디를 입력해주세요.');
             return;
         }
-
-        let newX = player.x;
-        let newY = player.y;
         
-        // P6: 영타(W,A,S,D) 이동을 막고 화살표 키만 허용
-        if (event.key === 'ArrowUp' || event.keyCode === 38) { // UP
-            newY -= 1;
-        } else if (event.key === 'ArrowDown' || event.keyCode === 40) { // DOWN
-            newY += 1;
-        } else if (event.key === 'ArrowLeft' || event.keyCode === 37) { // LEFT
-            newX -= 1;
-        } else if (event.key === 'ArrowRight' || event.keyCode === 39) { // RIGHT
-            newX += 1;
-        } else {
-            return; // 다른 키 무시 (W,A,S,D 포함)
-        }
-
-        event.preventDefault(); // 기본 브라우저 동작(스크롤) 방지
-
-        if (newX !== player.x || newY !== player.y) {
-            await updatePlayerPosition(newX, newY);
-        }
-    });
-    
-    // P7: 아이템 사용 버튼 이벤트
-    useItemBtn.addEventListener('click', useItem);
-    closeItemUseModalBtn.addEventListener('click', closeItemUseModalFunc);
-
-    // BGM 컨트롤
-    const bgmAudio = document.getElementById('bgmAudio');
-    const bgmToggleBtn = document.getElementById('bgmToggleBtn');
-    const bgmVolume = document.getElementById('bgmVolume');
-
-    bgmVolume.addEventListener('input', () => {
-        bgmAudio.volume = bgmVolume.value;
-    });
-
-    bgmToggleBtn.addEventListener('click', () => {
-        if (bgmAudio.paused) {
-            bgmAudio.play().then(() => {
-                bgmToggleBtn.textContent = 'PAUSE';
-            }).catch(e => {
-                console.log("BGM Play failed:", e);
-                bgmToggleBtn.textContent = 'PLAY';
-            });
-        } else {
-            bgmAudio.pause();
-            bgmToggleBtn.textContent = 'PLAY';
+        // **[수정]** 로그인 성공 시 관리자 모드가 아니라면 updatePlayerUI(true) 호출
+        const success = await loadPlayerFromFirestore(userId);
+        if (success) {
+            loggedInUserId = userId;
+            localStorage.setItem('loggedInUserId', userId);
+            playerLoginBox.style.display = 'none';
+            
+            // 관리자 로그인 상태가 아니라면 플레이어 UI 갱신
+            if (auth.currentUser?.email !== ADMIN_EMAIL) {
+                updateAdminUI(false); // 관리자 UI는 숨김
+                updatePlayerUI(true);
+            } else {
+                // 관리자 로그인 상태라면 플레이어 정보만 로드하고 관리자 UI 유지
+                updatePlayerUI(true); // 플레이어 패널은 보이게
+            }
+            
+            addLogItem(`시스템: 플레이어 **[${userId}]** 로그인 성공.`, 'system');
+            startChatListener(); // 채팅 리스너 시작
         }
     });
 
-    // 채팅 관련
+    // Chat
     sendChatBtn.addEventListener('click', async () => {
         const message = chatInput.value.trim();
-        if (!message) return;
-        
-        const nickname = loggedInUserId || chatNicknameInput.value.trim() || '탐험가';
-        const isAdminChat = isAdminMode && !loggedInUserId;
+        const nickname = document.getElementById('chatNickname').value.trim() || loggedInUserId || '탐험가';
 
-        try {
-            await addDoc(chatCollection, {
-                nickname: nickname,
-                message: message,
-                timestamp: serverTimestamp(),
-                isAdmin: isAdminChat
-            });
-            chatInput.value = '';
-        } catch (e) {
-            console.error("채팅 전송 실패:", e);
-            addLogItem("시스템: 채팅 전송 중 오류 발생.", 'system');
+        if (message && loggedInUserId) {
+            try {
+                const isAdmin = loggedInUserId === ADMIN_EMAIL || allUsers[loggedInUserId]?.isAdmin || false;
+                
+                await addDoc(collection(db, "chat"), {
+                    userId: loggedInUserId,
+                    nickname: nickname,
+                    message: message,
+                    isAdmin: isAdmin,
+                    timestamp: serverTimestamp()
+                });
+                
+                let text = `[${loggedInUserId}]: ${message}`;
+                if (isAdmin) text = `[ADMIN ${loggedInUserId}]: ${message}`;
+                
+                addLogItem(text, 'chat'); // 본인 메시지는 바로 출력
+                chatInput.value = '';
+            } catch (e) {
+                console.error("Error sending chat: ", e);
+                addLogItem("시스템: 채팅 전송 실패.", 'system');
+            }
+        } else if (message) {
+            addLogItem("시스템: 로그인 후 채팅을 사용할 수 있습니다.", 'system');
         }
     });
     chatInput.addEventListener('keypress', (e) => {
@@ -2641,191 +2520,641 @@ const initEventListeners = () => {
             sendChatBtn.click();
         }
     });
-    
-    // 맵 설정 탭
-    reloadBtn.addEventListener('click', () => loadMap(mapNameInput.value.trim()));
-    saveMapBtn.addEventListener('click', saveMap);
-    toggleGridBtn.addEventListener('click', () => {
-        isGridMode = !isGridMode;
-        toggleGridBtn.classList.toggle('active', isGridMode);
-        draw();
-    });
-    toggleEncounterBtn.addEventListener('click', () => {
-        isEncounterMode = !isEncounterMode;
-        isImpassableMode = false;
-        toggleEncounterBtn.classList.toggle('active', isEncounterMode);
-        toggleImpassableBtn.classList.remove('active');
-        addLogItem(`시스템: 조우 추가 모드 ${isEncounterMode ? '활성화' : '비활성화'}.`, 'system');
-    });
-    toggleImpassableBtn.addEventListener('click', () => {
-        isImpassableMode = !isImpassableMode;
-        isEncounterMode = false;
-        toggleImpassableBtn.classList.toggle('active', isImpassableMode);
-        toggleEncounterBtn.classList.remove('active');
-        addLogItem(`시스템: 제한 구역 추가 모드 ${isImpassableMode ? '활성화' : '비활성화'}.`, 'system');
-    });
-    
-    // 맵 좌표 설정 버튼
+
+    // Map Controls
+    document.getElementById('saveMap').addEventListener('click', () => saveMapDataToFirestore(mapNameInput.value));
+    document.getElementById('reload').addEventListener('click', () => loadMapDataFromFirestore(mapNameInput.value));
     document.getElementById('setPlayerPos').addEventListener('click', () => {
         const x = parseInt(startXInput.value);
         const y = parseInt(startYInput.value);
         if (!isNaN(x) && !isNaN(y)) {
-            mapData.startX = x;
-            mapData.startY = y;
-            addLogItem(`시스템: 맵 시작 좌표를 (${x}, ${y})로 설정. (저장 필요)`, 'system');
+             if (isImpassable(x, y)) {
+                alert("이동 불가 지점으로는 시작 좌표를 설정할 수 없습니다.");
+                return;
+             }
+             if (loggedInUserId) {
+                setPlayerPosition(currentMapName, x, y);
+             } else {
+                player.x = x;
+                player.y = y;
+                draw();
+             }
+             addLogItem(`시스템: 플레이어 위치 (${x}, ${y}) 설정.`, 'system');
+        } else {
+            alert('유효한 좌표를 입력해주세요.');
         }
     });
-
     document.getElementById('setTransitionPos').addEventListener('click', () => {
         const x = parseInt(transitionXInput.value);
         const y = parseInt(transitionYInput.value);
         if (!isNaN(x) && !isNaN(y)) {
-            mapData.transitionX = x;
-            mapData.transitionY = y;
-            addLogItem(`시스템: 맵 이동 좌표를 (${x}, ${y})로 설정. (저장 필요)`, 'system');
+             mapData.transitionX = x;
+             mapData.transitionY = y;
+             draw();
+             addLogItem(`시스템: 맵 이동 좌표 (${x}, ${y}) 설정.`, 'system');
+        } else if (transitionXInput.value === '' && transitionYInput.value === '') {
+             mapData.transitionX = null;
+             mapData.transitionY = null;
+             draw();
+             addLogItem(`시스템: 맵 이동 좌표 해제.`, 'system');
         } else {
-            mapData.transitionX = null;
-            mapData.transitionY = null;
-            addLogItem(`시스템: 맵 이동 좌표 해제. (저장 필요)`, 'system');
+            alert('유효한 좌표를 입력하거나 모두 비워주세요.');
         }
+    });
+    
+    document.getElementById('deleteAllEncBtn').addEventListener('click', () => {
+        if (confirm(`현재 맵의 **모든 조우 지점**을 삭제하시겠습니까?`)) {
+            encounterPoints = [];
+            draw();
+            saveMapDataToFirestore(currentMapName);
+            addLogItem("시스템: 조우 지점 전체 삭제 완료.", 'system');
+        }
+    });
+    document.getElementById('deleteAllImpBtn').addEventListener('click', () => {
+        if (confirm(`현재 맵의 **모든 이동 제한 구역**을 삭제하시겠습니까?`)) {
+            impassablePoints = [];
+            draw();
+            saveMapDataToFirestore(currentMapName);
+            addLogItem("시스템: 이동 제한 구역 전체 삭제 완료.", 'system');
+        }
+    });
+    document.getElementById('deleteAndInitMapBtn').addEventListener('click', () => {
+        if (confirm(`현재 맵 **[${currentMapName}]**의 모든 데이터를 삭제하고 초기화하시겠습니까?`)) {
+            deleteMapData(currentMapName);
+            loadMapDataFromFirestore('default');
+        }
+    });
+    
+
+    // Toggle Modes
+    const toggleGridBtn = document.getElementById('toggleGrid');
+    const toggleEncounterBtn = document.getElementById('toggleEncounter');
+    const toggleImpassableBtn = document.getElementById('toggleImpassable');
+    
+    const disableAllModes = () => {
+        isEncounterMode = false;
+        isImpassableMode = false;
+        currentEdit = null;
+        toggleEncounterBtn.classList.remove('active');
+        toggleImpassableBtn.classList.remove('active');
+        dragGhost.style.display = 'none';
+        draw();
+    };
+    
+    toggleGridBtn.addEventListener('click', () => {
+        isGridMode = !isGridMode;
+        toggleGridBtn.classList.toggle('active', isGridMode);
+        draw();
+        addLogItem(`시스템: 그리드 모드 ${isGridMode ? '활성화' : '비활성화'}.`, 'system');
+    });
+
+    toggleEncounterBtn.addEventListener('click', () => {
+        disableAllModes();
+        isEncounterMode = !toggleEncounterBtn.classList.contains('active');
+        toggleEncounterBtn.classList.toggle('active', isEncounterMode);
+        addLogItem(`시스템: 조우 추가 모드 ${isEncounterMode ? '활성화' : '비활성화'}.`, 'system');
         draw();
     });
 
-    // 조우 수정 모달 이벤트
-    encItemIdManualCheck.addEventListener('change', (e) => {
-        encItemIdManual.style.display = e.target.checked ? 'block' : 'none';
-        encItemIdSelect.style.display = e.target.checked ? 'none' : 'block';
+    toggleImpassableBtn.addEventListener('click', () => {
+        disableAllModes();
+        isImpassableMode = !toggleImpassableBtn.classList.contains('active');
+        toggleImpassableBtn.classList.toggle('active', isImpassableMode);
+        addLogItem(`시스템: 제한 추가 모드 ${isImpassableMode ? '활성화' : '비활성화'}.`, 'system');
+        draw();
     });
-    addChoiceBtn.addEventListener('click', () => {
-        if (editingEncounter) {
-            editingEncounter.data.choices.push({
-                text: '새로운 선택지',
-                resultText: '',
-                hpChange: 0,
-                itemAction: 'none',
-                itemId: '',
-                trigger: 'none',
-                data: ''
-            });
-            renderChoices(editingEncounter.data.choices);
-        }
-    });
-    saveEncEditBtn.addEventListener('click', saveEncEdit);
-    closeEncEditBtn.addEventListener('click', closeEditModal);
-    deleteEncEditBtn.addEventListener('click', deleteEncEdit);
     
-    // 유저 관리 탭
-    document.getElementById('addPlayerBtn').addEventListener('click', addPlayer);
-    updatePlayerStatusBtn.addEventListener('click', updatePlayerStatus);
-    updatePlayerMapBtn.addEventListener('click', updatePlayerMap);
-    giveItemBtn.addEventListener('click', handleGiveItem);
+    // Canvas Interaction for Admin Modes (Enc/Imp)
+    document.getElementById('container').addEventListener('mousemove', (e) => {
+        if (!isEncounterMode && !isImpassableMode) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const gridX = Math.floor(mouseX / GRID);
+        const gridY = Math.floor(mouseY / GRID);
 
-    // 아이템 관리 탭
-    addItemBtn.addEventListener('click', addItemDefinition);
-    
-    // 인벤토리 모달
-    closeModalInventoryModal.addEventListener('click', () => {
-        inventoryModal.style.display = 'none';
-    });
-    
-    // D3: 맵 초기화 버튼 이벤트 (DB 삭제 로직 제거)
-    deleteAndInitMapBtn.addEventListener('click', async () => {
-        if (confirm(`현재 로드된 맵 [${currentMapName}]의 모든 데이터를 초기화하시겠습니까? (Firebase의 맵 데이터는 삭제되지 않고 로컬 상태만 초기화됩니다.)`)) {
-            // DB 삭제 로직 제거됨
-            initMapData(); // 로컬 데이터 초기화
-            mapNameInput.value = 'default';
-            currentMapName = 'default';
-            addLogItem(`시스템: 현재 맵을 초기화했습니다.`, 'system');
-            draw();
-            await reloadMapList();
+        // 그리드 경계 확인
+        if (gridX >= 0 && gridX < canvas.width / GRID && gridY >= 0 && gridY < canvas.height / GRID) {
+            dragGhost.style.left = `${gridX * GRID}px`;
+            dragGhost.style.top = `${gridY * GRID}px`;
+            dragGhost.style.display = 'block';
+            dragGhost.style.background = isEncounterMode ? 'rgba(192, 57, 43, 0.4)' : 'rgba(100, 100, 100, 0.4)';
+            dragGhost.style.borderColor = isEncounterMode ? 'var(--accent)' : 'white';
+        } else {
+            dragGhost.style.display = 'none';
         }
     });
 
-    // D4: 채팅 전체 삭제 버튼 이벤트
-    deleteAllChatBtn.addEventListener('click', async () => {
-        if (confirm("정말로 모든 채팅 기록을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) {
-            try {
-                const q = query(chatCollection);
-                const snapshot = await getDocs(q);
-                const batch = db.batch();
-                snapshot.docs.forEach(doc => {
-                    batch.delete(doc.ref);
-                });
-                await batch.commit();
-                addLogItem("시스템: 모든 채팅 기록이 삭제되었습니다.", 'system');
-                logDisplay.innerHTML = '<div class="log-item system">시스템: 로그/채팅 시작.</div>'; // 화면 초기화
-            } catch (error) {
-                console.error("채팅 전체 삭제 실패:", error);
-                addLogItem("시스템: 채팅 전체 삭제 중 오류 발생.", 'system');
+    document.getElementById('container').addEventListener('mouseleave', () => {
+         dragGhost.style.display = 'none';
+    });
+
+    // 드래그 시작
+    document.getElementById('container').addEventListener('mousedown', (e) => {
+        if (!isEncounterMode && !isImpassableMode) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const gridX = Math.floor(mouseX / GRID);
+        const gridY = Math.floor(mouseY / GRID);
+
+        if (gridX >= 0 && gridX < canvas.width / GRID && gridY >= 0 && gridY < canvas.height / GRID) {
+            dragStartPoint = { x: gridX, y: gridY };
+        }
+    });
+
+    // 드래그 종료 및 클릭 처리
+    document.getElementById('container').addEventListener('mouseup', (e) => {
+        if (!isEncounterMode && !isImpassableMode) return;
+        if (!dragStartPoint) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const gridX = Math.floor(mouseX / GRID);
+        const gridY = Math.floor(mouseY / GRID);
+
+        const isClick = dragStartPoint.x === gridX && dragStartPoint.y === gridY;
+        
+        if (isClick) {
+            const x = gridX;
+            const y = gridY;
+            const key = `${x}_${y}`;
+            
+            // 맵 요소 클릭 (수정/삭제)
+            const clickedEnc = encounterPoints.find(p => p.x === x && p.y === y);
+            const clickedImp = impassablePoints.find(p => p.x === x && p.y === y);
+
+            if (isEncounterMode) {
+                if (clickedEnc) {
+                    // 기존 조우 클릭: 수정 모드
+                    showEditModal(clickedEnc);
+                } else if (!clickedImp) {
+                    // 빈 공간 클릭: 새 조우 추가
+                    const newEnc = { x, y, data: { name: `새 조우 (${x}, ${y})`, text: '', charUrl: '', itemId: '', trigger: 'none', data: '', choices: [] } };
+                    encounterPoints.push(newEnc);
+                    saveMapDataToFirestore(currentMapName);
+                    showEditModal(newEnc);
+                    addLogItem(`시스템: 조우 지점 (${x}, ${y}) 추가.`, 'system');
+                }
+            } else if (isImpassableMode) {
+                if (clickedImp) {
+                    // 기존 제한 클릭: 삭제
+                    impassablePoints = impassablePoints.filter(p => p.x !== x || p.y !== y);
+                    addLogItem(`시스템: 이동 제한 구역 (${x}, ${y}) 삭제.`, 'system');
+                } else if (!clickedEnc) {
+                    // 빈 공간 클릭: 새 제한 추가
+                    impassablePoints.push({ x, y });
+                    addLogItem(`시스템: 이동 제한 구역 (${x}, ${y}) 추가.`, 'system');
+                }
+                draw();
+                saveMapDataToFirestore(currentMapName);
+            }
+        } 
+        // 드래그 범위 처리 (TODO: 다중 선택/삭제)
+        
+        dragStartPoint = null;
+    });
+
+    // 기존 맵 요소 클릭 이벤트 위임 (관리자 모드)
+    grid.addEventListener('click', (e) => {
+        if (loggedInUserId !== ADMIN_EMAIL) return;
+
+        const target = e.target;
+        const x = parseInt(target.dataset.x);
+        const y = parseInt(target.dataset.y);
+        const type = target.dataset.type;
+
+        if (isNaN(x) || isNaN(y) || !type) return;
+
+        if (type === 'encounter') {
+            const point = encounterPoints.find(p => p.x === x && p.y === y);
+            if (point && isEncounterMode) {
+                showEditModal(point);
+            } else if (point && !isEncounterMode && !isImpassableMode) {
+                 // 모드 비활성화 시에도 클릭하면 수정 모달을 띄우도록 수정
+                 showEditModal(point);
+            }
+        } else if (type === 'impassable') {
+            if (isImpassableMode) {
+                // 제한 추가 모드에서는 클릭 시 삭제
+                impassablePoints = impassablePoints.filter(p => p.x !== x || p.y !== y);
+                addLogItem(`시스템: 이동 제한 구역 (${x}, ${y}) 삭제.`, 'system');
+                draw();
+                saveMapDataToFirestore(currentMapName);
             }
         }
     });
 
-    // 관리자 패널 드래그 및 최소화/복원 로직 (추가)
-    const adminPanelTitle = adminPanel.querySelector('h4');
-    const minimizeBtn = document.getElementById('minimizeBtn');
-    let adminPanelPos = { x: adminPanel.offsetLeft, y: adminPanel.offsetTop };
-    
-    const startDrag = (e) => {
-        isDraggingAdminPanel = true;
-        adminPanelPos.x = e.clientX - adminPanel.offsetLeft;
-        adminPanelPos.y = e.clientY - adminPanel.offsetTop;
-        adminPanelTitle.style.cursor = 'grabbing';
-        document.addEventListener('mousemove', onDrag);
-        document.addEventListener('mouseup', endDrag);
+    // 조우 수정 모달
+    const showEditModal = (point) => {
+        currentEdit = point;
+        const data = point.data;
+        
+        // UI 초기화 및 데이터 로드
+        encNameInput.value = data.name || '';
+        encTextarea.value = data.text || '';
+        encCharUrlInput.value = data.charUrl || '';
+        encTriggerSelect.value = data.trigger || 'none';
+        encDataInput.value = data.data || '';
+
+        // 아이템 선택/직접 입력 처리
+        encItemIdSelect.value = data.itemId || '';
+        encItemIdManual.value = ''; // 초기화
+        encItemIdManualCheck.checked = false;
+        encItemIdSelect.style.display = 'block';
+        encItemIdManual.style.display = 'none';
+
+        if (data.itemId && !itemDefinitions[data.itemId]) {
+            // 없는 아이템 ID인 경우 직접 입력 모드로 전환
+            encItemIdSelect.style.display = 'none';
+            encItemIdManual.style.display = 'block';
+            encItemIdManual.value = data.itemId;
+            encItemIdManualCheck.checked = true;
+        }
+
+        renderChoices(data.choices || []);
+
+        // 드래그 고스트 숨김
+        dragGhost.style.display = 'none';
+        
+        // 기존 선택된 지점 하이라이트
+        draw(); 
+        document.querySelectorAll(`#grid div`).forEach(div => {
+             div.style.border = '1px solid var(--accent)';
+        });
+        document.querySelector(`#grid div[data-x='${point.x}'][data-y='${point.y}'][data-type='encounter']`).style.border = '2px solid cyan';
+
+
+        editModalBg.style.display = 'flex';
     };
 
-    const onDrag = (e) => {
-        if (!isDraggingAdminPanel) return;
-        let newX = e.clientX - adminPanelPos.x;
-        let newY = e.clientY - adminPanelPos.y;
-        adminPanel.style.left = newX + 'px';
-        adminPanel.style.top = newY + 'px';
-        adminPanel.style.right = 'auto'; 
-    };
+    document.getElementById('saveEncEdit').addEventListener('click', () => {
+        if (!currentEdit) return;
 
-    const endDrag = () => {
-        isDraggingAdminPanel = false;
-        adminPanelTitle.style.cursor = 'grab';
-        document.removeEventListener('mousemove', onDrag);
-        document.removeEventListener('mouseup', endDrag);
-    };
+        const data = currentEdit.data;
+        data.name = encNameInput.value;
+        data.text = encTextarea.value;
+        data.charUrl = encCharUrlInput.value;
+        data.trigger = encTriggerSelect.value;
+        data.data = encDataInput.value;
 
-    adminPanelTitle.addEventListener('mousedown', startDrag);
-    
-    minimizeBtn.addEventListener('click', () => {
-        if (adminPanel.classList.contains('minimized')) {
-            adminPanel.classList.remove('minimized');
-            minimizeBtn.textContent = '[—]';
+        // 아이템 ID 처리
+        if (encItemIdManualCheck.checked) {
+            data.itemId = encItemIdManual.value.trim();
         } else {
-            adminPanel.classList.add('minimized');
-            minimizeBtn.textContent = '[+]';
+            data.itemId = encItemIdSelect.value;
+        }
+
+        // 선택지 데이터 수집
+        data.choices = [];
+        document.querySelectorAll('#choices .choice').forEach(choiceDiv => {
+            data.choices.push({
+                text: choiceDiv.querySelector('.choiceText').value,
+                resultText: choiceDiv.querySelector('.choiceResultText').value,
+                hpChange: parseInt(choiceDiv.querySelector('.choiceHpChange').value) || 0,
+                itemRequirement: choiceDiv.querySelector('.choiceItemRequirement').value,
+                itemGive: choiceDiv.querySelector('.choiceItemGive').value,
+                trigger: choiceDiv.querySelector('.choiceTrigger').value,
+                data: choiceDiv.querySelector('.choiceData').value
+            });
+        });
+
+        // 빈 선택지는 제외
+        data.choices = data.choices.filter(c => c.text.trim() !== '');
+
+        saveMapDataToFirestore(currentMapName);
+        editModalBg.style.display = 'none';
+        draw();
+        addLogItem(`시스템: 조우 지점 (${currentEdit.x}, ${currentEdit.y}) 저장 완료.`, 'system');
+        currentEdit = null;
+    });
+
+    document.getElementById('closeEncEdit').addEventListener('click', () => {
+        editModalBg.style.display = 'none';
+        currentEdit = null;
+        draw();
+    });
+    
+    document.getElementById('deleteEncEdit').addEventListener('click', () => {
+        if (currentEdit && confirm(`조우 지점 (${currentEdit.x}, ${currentEdit.y})을 삭제하시겠습니까?`)) {
+            encounterPoints = encounterPoints.filter(p => p !== currentEdit);
+            saveMapDataToFirestore(currentMapName);
+            editModalBg.style.display = 'none';
+            draw();
+            addLogItem(`시스템: 조우 지점 (${currentEdit.x}, ${currentEdit.y}) 삭제 완료.`, 'system');
+            currentEdit = null;
         }
     });
 
-    // 탭 전환 이벤트
-    document.getElementById('mapTabBtn').addEventListener('click', () => {
-        document.querySelector('.admin-tabs button.active').classList.remove('active');
-        document.querySelector('.admin-tab-content.active').classList.remove('active');
-        document.getElementById('mapTabBtn').classList.add('active');
-        document.getElementById('mapTabContent').classList.add('active');
-        reloadMapList();
+    document.getElementById('addChoice').addEventListener('click', () => {
+        if (!currentEdit.data.choices) currentEdit.data.choices = [];
+        currentEdit.data.choices.push({ 
+            text: '', 
+            resultText: '', 
+            hpChange: 0, 
+            itemRequirement: '',
+            itemGive: '',
+            trigger: 'none', 
+            data: '' 
+        });
+        renderChoices(currentEdit.data.choices);
+    });
+    
+    encItemIdManualCheck.addEventListener('change', () => {
+        if (encItemIdManualCheck.checked) {
+            encItemIdSelect.style.display = 'none';
+            encItemIdManual.style.display = 'block';
+            encItemIdManual.value = encItemIdSelect.value; // 기존 선택 값 복사
+        } else {
+            encItemIdSelect.style.display = 'block';
+            encItemIdManual.style.display = 'none';
+            encItemIdSelect.value = encItemIdManual.value; // 기존 입력 값 복사
+        }
     });
 
-    document.getElementById('userTabBtn').addEventListener('click', () => {
-        document.querySelector('.admin-tabs button.active').classList.remove('active');
-        document.querySelector('.admin-tab-content.active').classList.remove('active');
-        document.getElementById('userTabBtn').classList.add('active');
-        document.getElementById('userTabContent').classList.add('active');
-        fetchAllUsers(true);
+    // Player Encounter Modal
+    closeEncounterModalBtn.addEventListener('click', () => {
+        encounterModalBg.style.display = 'none';
     });
 
-    document.getElementById('itemTabBtn').addEventListener('click', () => {
-        document.querySelector('.admin-tabs button.active').classList.remove('active');
-        document.querySelector('.admin-tab-content.active').classList.remove('active');
-        document.getElementById('itemTabBtn').classList.add('active');
-        document.getElementById('itemTabContent').classList.add('active');
-        fetchAllItems(true);
+    // Item Use Modal
+    useItemBtn.addEventListener('click', useCurrentItem);
+    document.getElementById('closeItemUseModal').addEventListener('click', () => {
+        itemUseModalBg.style.display = 'none';
+        currentSelectedItem = null;
+    });
+
+    // Inventory Modal (Admin)
+    document.getElementById('closeInventoryModal').addEventListener('click', () => {
+        inventoryModal.style.display = 'none';
+    });
+
+    // BGM Controls
+    bgmVolumeInput.addEventListener('input', (e) => {
+        bgmAudio.volume = e.target.value;
+    });
+    bgmToggleBtn.addEventListener('click', () => {
+        if (bgmAudio.paused) {
+            bgmAudio.play().catch(e => {
+                 addLogItem("시스템: BGM 재생 실패.", 'system');
+            });
+            bgmToggleBtn.textContent = 'PAUSE';
+        } else {
+            bgmAudio.pause();
+            bgmToggleBtn.textContent = 'PLAY';
+        }
+    });
+    // BGM이 로드되어 재생 가능할 때 자동 볼륨 설정
+    bgmAudio.addEventListener('canplay', () => {
+        bgmAudio.volume = bgmVolumeInput.value;
+    });
+    
+    // Admin Tabs
+    document.getElementById('mapTabBtn').addEventListener('click', () => switchAdminTab('mapTab'));
+    document.getElementById('userTabBtn').addEventListener('click', () => switchAdminTab('userTab'));
+    document.getElementById('itemTabBtn').addEventListener('click', () => switchAdminTab('itemTab'));
+
+    // Admin Drag/Minimize (Experimental)
+    const dragHandle = adminPanel.querySelector('h4');
+    const minimizeBtn = document.getElementById('minimizeBtn');
+    let isDragging = false;
+    let offsetX, offsetY;
+    
+    dragHandle.addEventListener('mousedown', (e) => {
+        if (e.target === minimizeBtn) return; // 최소화 버튼 클릭 시 드래그 방지
+        isDragging = true;
+        offsetX = e.clientX - adminPanel.offsetLeft;
+        offsetY = e.clientY - adminPanel.offsetTop;
+        dragHandle.style.cursor = 'grabbing';
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        adminPanel.style.left = `${e.clientX - offsetX}px`;
+        adminPanel.style.top = `${e.clientY - offsetY}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        dragHandle.style.cursor = 'grab';
+    });
+
+    minimizeBtn.addEventListener('click', () => {
+        const isMinimized = adminPanel.classList.toggle('minimized');
+        minimizeBtn.textContent = isMinimized ? '[+]' : '[—]';
+        dragHandle.style.cursor = isMinimized ? 'pointer' : 'grab'; // 최소화 시 드래그 커서 변경
+    });
+
+    // User Management Events
+    document.getElementById('addPlayerBtn').addEventListener('click', async () => {
+        const userId = document.getElementById('newUserId').value.trim();
+        const charUrl = document.getElementById('newUserCharUrl').value.trim();
+        if (!userId) {
+            alert("플레이어 ID를 입력해주세요.");
+            return;
+        }
+        
+        const playerDocRef = doc(db, "players", userId);
+        const playerDoc = await getDoc(playerDocRef);
+
+        if (playerDoc.exists()) {
+             alert("이미 존재하는 ID입니다.");
+             return;
+        }
+
+        const newPlayer = {
+            id: userId,
+            hp: MAX_HP,
+            charUrl: charUrl || 'https://via.placeholder.com/32/3498db/FFFFFF?text=P',
+            inventory: {},
+            map: 'default',
+            x: mapData.startX || 0,
+            y: mapData.startY || 0,
+            encountered: {},
+            lastPlayed: serverTimestamp(),
+            isAdmin: false
+        };
+
+        try {
+            await setDoc(playerDocRef, newPlayer);
+            addLogItem(`시스템: 플레이어 [${userId}] 생성 완료.`, 'system');
+            document.getElementById('newUserId').value = '';
+            document.getElementById('newUserCharUrl').value = '';
+            fetchAllUsers(true);
+        } catch (e) {
+            console.error("Error creating player: ", e);
+            addLogItem("시스템: 플레이어 생성 실패.", 'system');
+        }
+    });
+
+    document.getElementById('updatePlayerStatusBtn').addEventListener('click', async () => {
+        const userId = document.getElementById('selectPlayerId').value;
+        const hp = parseInt(document.getElementById('playerHpInput').value);
+
+        if (!userId) {
+            alert("플레이어를 선택해주세요.");
+            return;
+        }
+        if (isNaN(hp) || hp < 0) {
+            alert("유효한 HP 값을 입력해주세요.");
+            return;
+        }
+
+        try {
+            await updateDoc(doc(db, "players", userId), { hp: Math.min(MAX_HP, hp) });
+            addLogItem(`시스템: [${userId}]의 HP를 ${Math.min(MAX_HP, hp)}로 업데이트.`, 'system');
+            
+            // 현재 로그인된 플레이어의 HP가 변경된 경우 상태 갱신
+            if (loggedInUserId === userId) {
+                 await setPlayerHP(Math.min(MAX_HP, hp)); 
+            }
+
+            fetchAllUsers(true);
+            document.getElementById('playerHpInput').value = '';
+        } catch (e) {
+            console.error("Error updating player status: ", e);
+            addLogItem("시스템: 플레이어 상태 업데이트 실패.", 'system');
+        }
+    });
+
+    document.getElementById('updatePlayerMapBtn').addEventListener('click', async () => {
+        const userId = document.getElementById('selectPlayerIdMap').value;
+        const mapName = document.getElementById('playerMapInput').value.trim();
+        const x = parseInt(document.getElementById('playerXInput').value);
+        const y = parseInt(document.getElementById('playerYInput').value);
+
+        if (!userId) {
+            alert("플레이어를 선택해주세요.");
+            return;
+        }
+        if (!mapName) {
+            alert("맵 이름을 입력해주세요.");
+            return;
+        }
+        if (isNaN(x) || isNaN(y) || x < 0 || y < 0) {
+            alert("유효한 좌표를 입력해주세요.");
+            return;
+        }
+        
+        try {
+            await updateDoc(doc(db, "players", userId), { map: mapName, x: x, y: y });
+            addLogItem(`시스템: [${userId}]를 [${mapName}] 맵의 (${x}, ${y})로 이동시켰습니다.`, 'system');
+            
+            // 현재 로그인된 플레이어의 위치가 변경된 경우 상태 갱신 및 맵 로드
+            if (loggedInUserId === userId) {
+                await loadMapDataFromFirestore(mapName);
+                await setPlayerPosition(mapName, x, y);
+            }
+            
+            fetchAllUsers(true);
+            document.getElementById('playerMapInput').value = '';
+            document.getElementById('playerXInput').value = '';
+            document.getElementById('playerYInput').value = '';
+        } catch (e) {
+            console.error("Error updating player map: ", e);
+            addLogItem("시스템: 플레이어 맵 업데이트 실패.", 'system');
+        }
+    });
+
+    document.getElementById('giveItemBtn').addEventListener('click', async () => {
+        const userId = document.getElementById('giveItemPlayerSelect').value;
+        const itemId = document.getElementById('giveItemSelect').value;
+
+        if (!userId || !itemId) {
+            alert("플레이어와 아이템을 모두 선택해주세요.");
+            return;
+        }
+
+        await addItemToPlayer(userId, itemId, 1);
+        document.getElementById('giveItemPlayerSelect').value = '';
+        document.getElementById('giveItemSelect').value = '';
+    });
+
+    // Item Definition Events
+    document.getElementById('addItemBtn').addEventListener('click', async () => {
+        const itemId = document.getElementById('newItemId').value.trim();
+        const name = document.getElementById('newItemName').value.trim();
+        const imageUrl = document.getElementById('newItemImageUrl').value.trim();
+        const hpRecover = parseInt(document.getElementById('newItemHpRecover').value);
+        const description = document.getElementById('newItemDescription').value.trim();
+
+        if (!itemId || !name) {
+            alert("아이템 ID와 이름을 입력해주세요.");
+            return;
+        }
+        if (isNaN(hpRecover) || hpRecover < 0) {
+            alert("유효한 HP 회복량을 입력해주세요.");
+            return;
+        }
+
+        const itemDocRef = doc(db, "items", itemId);
+        const itemDoc = await getDoc(itemDocRef);
+
+        if (itemDoc.exists()) {
+             alert("이미 존재하는 아이템 ID입니다.");
+             return;
+        }
+
+        const newItem = {
+            name,
+            imageUrl: imageUrl || 'https://via.placeholder.com/40/666666/FFFFFF?text=?',
+            hpRecover,
+            description: description || '아이템 설명이 없습니다.'
+        };
+
+        try {
+            await setDoc(itemDocRef, newItem);
+            addLogItem(`시스템: 아이템 정의 [${itemId}] 등록 완료.`, 'system');
+            
+            document.getElementById('newItemId').value = '';
+            document.getElementById('newItemName').value = '';
+            document.getElementById('newItemImageUrl').value = '';
+            document.getElementById('newItemHpRecover').value = 0;
+            document.getElementById('newItemDescription').value = '';
+
+            fetchAllItems(true);
+        } catch (e) {
+            console.error("Error adding item: ", e);
+            addLogItem("시스템: 아이템 정의 등록 실패.", 'system');
+        }
+    });
+
+    document.getElementById('deleteAllChatBtn').addEventListener('click', async () => {
+        if (confirm("경고: 모든 채팅 기록을 영구적으로 삭제하시겠습니까?")) {
+            try {
+                const q = query(collection(db, "chat"));
+                const snapshot = await getDocs(q);
+                const batch = writeBatch(db);
+                
+                snapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+
+                await batch.commit();
+                logDisplay.innerHTML = '<div class="log-item system">시스템: 채팅 기록이 전체 삭제되었습니다.</div>';
+            } catch (e) {
+                console.error("Error deleting chat history: ", e);
+                addLogItem("시스템: 채팅 기록 전체 삭제 실패.", 'system');
+            }
+        }
+    });
+
+    document.getElementById('logToggleBtn').addEventListener('click', async () => {
+        const btn = document.getElementById('logToggleBtn');
+        if (btn.textContent.includes('🔗')) {
+            await fetchAllChatHistory();
+            btn.textContent = '📜';
+            btn.title = '실시간 로그 보기';
+        } else {
+             logDisplay.innerHTML = '<div class="log-item system">시스템: 실시간 로그 시작.</div>';
+             startChatListener(); // 실시간 로그 리스너 재개 (다시 최신 메시지만 받게됨)
+             btn.textContent = '🔗';
+             btn.title = '전체 채팅 기록 보기';
+        }
     });
 };
 
@@ -2836,10 +3165,15 @@ onAuthStateChanged(auth, (user) => {
     if (user && user.email === ADMIN_EMAIL) {
         updateAdminUI(true);
         addLogItem(`시스템: 관리자 (${user.email}) 로그인 성공.`, 'system');
-        // 관리자 로그인 시 맵 목록 및 유저/아이템 정보 갱신
-        reloadMapList();
-        fetchAllUsers(true);
-        fetchAllItems(true);
+        // 관리자 로그인 시에도 플레이어 로그인 상태 확인
+        const savedPlayerId = localStorage.getItem('loggedInUserId');
+        if (savedPlayerId) {
+            loggedInUserId = savedPlayerId;
+            loadPlayerFromFirestore(savedPlayerId).then(() => {
+                updatePlayerUI(true); // 플레이어 UI 활성화
+                startChatListener();
+            });
+        }
     } else {
         if (!loggedInUserId) {
             updateAdminUI(false);
@@ -2853,9 +3187,8 @@ onAuthStateChanged(auth, (user) => {
 const initialMap = localStorage.getItem('currentMap') || 'default';
 
 Promise.all([
-    // 초기 로드 시점에는 UI 업데이트 없이 데이터만 가져옴
-    fetchAllUsers(false),
-    fetchAllItems(false),
+    fetchAllUsers(false), // 일단 유저 목록 로드
+    fetchAllItems(true),
     loadMapDataFromFirestore(initialMap).then(loaded => {
         if (!loaded) {
             mapNameInput.value = 'default';
@@ -2863,21 +3196,40 @@ Promise.all([
             addLogItem(`시스템: 맵 데이터가 없어 **[default]** 맵으로 초기화.`, 'system');
         }
     }),
-    // 맵 리스트는 관리자 UI 업데이트 시 호출되도록 함
+    reloadMapList()
 ]).then(() => {
-    // 모든 초기 데이터 로드 완료 후 플레이어 위치 설정 및 드로우
     startXInput.value = player.x;
     startYInput.value = player.y; 
     draw();
 
-    const savedPlayerId = localStorage.getItem('playerId');
-    if (savedPlayerId) {
-        playerLogin(savedPlayerId);
+    const savedPlayerId = localStorage.getItem('loggedInUserId');
+    if (savedPlayerId && !auth.currentUser) { // 관리자 로그인 상태가 아닐 때만 자동 로그인 시도
+        loggedInUserId = savedPlayerId;
+        loadPlayerFromFirestore(savedPlayerId).then(() => {
+            updatePlayerUI(true);
+            addLogItem(`시스템: 플레이어 **[${savedPlayerId}]** 자동 로그인.`, 'system');
+            startChatListener();
+        });
+    } else if (savedPlayerId && auth.currentUser?.email === ADMIN_EMAIL) {
+         // 관리자로 로그인했는데, 이전에 플레이어 로그인 기록이 있다면
+         loggedInUserId = savedPlayerId;
+         loadPlayerFromFirestore(savedPlayerId).then(() => {
+            updatePlayerUI(true); // 플레이어 UI 활성화
+            startChatListener();
+         });
     }
     
-    // 초기 맵 로드 후 UI에 아이템 정의 반영
-    renderItemDefinitions();
+    // 최종적으로 관리자/플레이어 UI 상태 한번 더 갱신
+    if (auth.currentUser?.email === ADMIN_EMAIL) {
+        updateAdminUI(true);
+    } else if (loggedInUserId) {
+        updatePlayerUI(true);
+    } else {
+        updateAdminUI(false);
+        updatePlayerUI(false);
+    }
 });
+
 </script>
 </body>
 </html>
