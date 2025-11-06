@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ko">
 <head>
@@ -1344,7 +1343,28 @@
   }
 
   function paginateText(fullText) {
-      currentTextPages = fullText.split('\n\n');
+      stopTypewriter();
+
+      const pages = [];
+      const matches = fullText.matchAll(/\[([^\]]+)\]/g);
+      
+      let hasMatches = false;
+      for (const match of matches) {
+          pages.push(match[1]);
+          hasMatches = true;
+      }
+
+      if (!hasMatches) {
+          pages.push(fullText);
+      } else if (pages.length === 0) {
+          if (fullText.trim() === '') {
+              pages.push('');
+          } else {
+              pages.push(fullText); 
+          }
+      }
+
+      currentTextPages = pages;
       currentPageIndex = 0;
       typeWriter(currentTextPages[currentPageIndex], checkContinue);
   }
