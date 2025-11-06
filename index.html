@@ -1,10 +1,10 @@
-
 <!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Valentine Eve</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
   <style>
     :root{
       --width:960px; --height:600px;
@@ -2814,6 +2814,7 @@
       if (isSelectMode) {
           await onDeleteSelectedItemsClick();
       } else {
+          
           list.classList.add('select-mode');
           btn.textContent = 'Delete Selected';
       }
@@ -2952,6 +2953,6 @@
   init();
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 </body>
 </html>
