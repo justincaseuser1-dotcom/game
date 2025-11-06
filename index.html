@@ -4,6 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Valentine Eve</title>
+  
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  
   <style>
     :root{
       --width:960px; --height:600px;
@@ -2344,6 +2347,14 @@
     } else if(requires){
         
         isLocked = true;
+        /* ==================================================================
+          [수정됨] 
+          1번 항목 수정:
+          '주변을 둘러보자...' 텍스트가 [페이지] 구문으로 분리되지 않고
+          기존 텍스트에 \n\n (줄바꿈)으로 이어지도록 수정했습니다.
+          이렇게 하면 paginateText 함수가 페이지를 분리하지 않고 한 페이지에 표시합니다.
+          ==================================================================
+        */
         mainText += '\n\n주변을 둘러보자. 도움이 될 만한 게 있을지도 모른다.';
     } else if(gives || onSuccess || (hpCost > 0 && !hasBeenHPDrained)) {
         
@@ -2867,6 +2878,9 @@
               sceneList.classList.remove('select-mode');
               btnToggleSceneSelect.textContent = 'Select';
           }
+      } else {
+          sceneList.classList.remove('select-mode');
+          btnToggleSceneSelect.textContent = 'Select';
       }
       
   }
@@ -2910,6 +2924,9 @@
           
           hotspotListContainer.classList.remove('select-mode');
           btnToggleHotspotSelect.textContent = 'Select';
+      } else {
+          hotspotListContainer.classList.remove('select-mode');
+          btnToggleHotspotSelect.textContent = 'Select';
       }
       
   }
@@ -2942,6 +2959,9 @@
           await showNotify(`${selectedIds.length}개의 아이템을 삭제했습니다.`, '삭제 완료');
           
           
+          itemList.classList.remove('select-mode');
+          btnToggleItemSelect.textContent = 'Select';
+      } else {
           itemList.classList.remove('select-mode');
           btnToggleItemSelect.textContent = 'Select';
       }
