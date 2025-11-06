@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Valentine Eve</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
   <style>
     :root{
       --width:960px; --height:600px;
@@ -1344,28 +1343,7 @@
   }
 
   function paginateText(fullText) {
-      stopTypewriter();
-
-      const pages = [];
-      const matches = fullText.matchAll(/\[([^\]]+)\]/g);
-      
-      let hasMatches = false;
-      for (const match of matches) {
-          pages.push(match[1]);
-          hasMatches = true;
-      }
-
-      if (!hasMatches) {
-          pages.push(fullText);
-      } else if (pages.length === 0) {
-          if (fullText.trim() === '') {
-              pages.push('');
-          } else {
-              pages.push(fullText); 
-          }
-      }
-
-      currentTextPages = pages;
+      currentTextPages = fullText.split('\n\n');
       currentPageIndex = 0;
       typeWriter(currentTextPages[currentPageIndex], checkContinue);
   }
@@ -2814,7 +2792,6 @@
       if (isSelectMode) {
           await onDeleteSelectedItemsClick();
       } else {
-          
           list.classList.add('select-mode');
           btn.textContent = 'Delete Selected';
       }
@@ -2953,6 +2930,6 @@
   init();
 
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </body>
 </html>
