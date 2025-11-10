@@ -1807,9 +1807,16 @@
     updateChoicePopupVisibility();
   }
 
-  function onSkipAllAndClose() {
+  async function onSkipAllAndClose() {
     stopTypewriter();
-    closePopup();
+    
+    currentPageIndex = currentTextPages.length - 1;
+    
+    await checkContinue(); 
+    
+    if (playerState.hp > 0) {
+        closePopup();
+    }
   }
 
   function closePopup(){ 
