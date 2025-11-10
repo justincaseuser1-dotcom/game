@@ -271,23 +271,10 @@
   </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+  import { auth, db } from './firebase-config.js';
+  import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
   import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/modular/sortable.esm.js';
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAnul0m3AB6Rfm5o2NSPab5qkIg23YmNt0",
-    authDomain: "evervalen-d01e2.firebaseapp.com",
-    projectId: "evervalen-d01e2",
-    storageBucket: "evervalen-d01e2.firebasestorage.app",
-    messagingSenderId: "854277067793",
-    appId: "1:854277067793:web:87a35e884ee96f16a10db0"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
 
   const initialSceneData = { "room": { id: "room", title: "어두운 방", backgroundUrl: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='960' height='600'><rect width='100%' height='100%' fill='#0b0b10'/></svg>`), bgmUrl: null } };
   const initialItemData = { "key": { id: "key", name: "낡은 열쇠", description: "녹이 슬어 보이는 낡은 열쇠. 어떤 문을 여는 데 사용할 수 있을 것 같다.", imgUrl: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='#bfb56b'/></svg>`), itemType: "normal", uses: 1 } };
