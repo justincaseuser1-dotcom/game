@@ -3,643 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Valentine Eve</title>
-  
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  
-  <style>
-    :root{
-      --width:960px; --height:600px;
-      --bg: #000000;
-      --panel: #1a1a1a;
-      --panel-2: #2a2a2a;
-      --border: #4a2a2a;
-      --muted: #888888;
-      --accent: #e0e0e0;
-      --danger:#e87d7d;
-      --highlight: #8a3a3a;
-      --editor-select: #8a3a3a;
-    }
-    
-    html,body{
-        height:100%;
-        margin:0;
-        font-family:"Dotum", "돋움", "Gulim", "Apple SD Gothic Neo", sans-serif; 
-        background:var(--bg); 
-        color:var(--accent); 
-        display:flex; 
-        align-items:center; 
-        justify-content:center;
-        font-size: 14px; 
-        line-height: 1.5;
-    }
-    .wrap{width:min(100%,var(--width));}
-    
-    body[data-mode="admin"]{align-items:flex-start; justify-content:flex-start;}
-    body[data-mode="admin"] .wrap{max-width:none;}
-
-    .btn{
-        background:var(--panel-2);
-        border:1px solid var(--border);
-        padding:6px 12px;
-        border-radius:0;
-        color:var(--accent);
-        cursor:pointer;
-        font-size:14px;
-        font-family: inherit;
-    }
-    .btn:hover{
-        background:var(--panel);
-        border-color: var(--highlight);
-    }
-    .btn.primary{
-        background:var(--highlight);
-        border-color:var(--highlight);
-        color:var(--accent);
-        font-weight:bold;
-    }
-    .btn.primary:hover{
-        background:var(--accent);
-        border-color:var(--accent);
-        color: var(--bg);
-    }
-    .btn.ghost{
-        background:transparent;
-        border:1px solid var(--border);
-        color:var(--accent);
-    }
-    .btn.ghost:hover{
-        background:var(--panel-2);
-        border-color: var(--highlight);
-    }
-    .btn.ghost.danger{
-        color: var(--danger);
-        border-color: var(--border);
-    }
-    .btn.ghost.danger:hover{
-        background: var(--danger);
-        color: var(--panel);
-        border-color: var(--danger);
-    }
-    .btn.btn-sm {
-        padding: 3px 8px;
-        font-size: 12px;
-    }
-
-
-    .game{position:relative;width:var(--width);height:var(--height);overflow:hidden;border:1px solid var(--border);background:#000;box-shadow:none;}
-    .scene-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:none;}
-    .hotspot{position:absolute;cursor:crosshair;}
-
-    .popup{
-        position:absolute;
-        display:none;
-        z-index:60;
-        color:var(--accent);
-    }
-    
-    .popup:not(#inspectPopup){
-        left:50%;
-        top:50%;
-        transform:translate(-50%,-50%);
-        min-width:320px;
-        background:var(--panel);
-        padding:12px;
-        border-radius:0;
-        border:1px solid var(--border);
-    }
-    
-    #inspectPopup{
-        left: 12px;
-        right: 12px;
-        bottom: 12px;
-        width: auto;
-        height: 150px;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 15px;
-        border: 1px solid var(--border);
-        border-radius:0;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 15px;
-        box-sizing: border-box;
-    }
-    
-    .popup.show{display:flex}
-    
-    #inspectPopup h3{
-        display: none;
-    }
-    
-    .popup:not(#inspectPopup) h3{
-        margin:0;
-        font-size:16px;
-        color:var(--accent);
-        border-bottom:1px solid var(--border);
-        padding-bottom:6px;
-        margin-bottom:10px;
-    }
-    
-    .popup:not(#inspectPopup) p{margin:10px 0;color:var(--accent); white-space: pre-wrap; font-size: 14px;}
-    
-    #inspectPopup #popupImg {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        margin: 0;
-        border: 1px solid var(--border);
-        flex-shrink: 0;
-    }
-    
-    .popup-text-container {
-        flex-grow: 1;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    #inspectPopup p{
-        flex-grow: 1;
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.6;
-        white-space: pre-wrap;
-        color: var(--accent);
-        margin-block-start: 0;
-        margin-block-end: 0;
-        overflow: hidden;
-        cursor: pointer;
-    }
-    
-    #popupHeader {
-        margin-bottom: 5px;
-    }
-    #popupHotspotLabel {
-        font-weight: bold;
-        color: var(--accent);
-        font-size: 16px;
-    }
-    
-    #popupContinue {
-        position: absolute;
-        bottom: 0px;
-        right: 5px;
-        color: var(--accent);
-        font-size: 18px;
-        cursor: pointer;
-        animation: blink 1.5s step-end infinite;
-    }
-    
-    @keyframes blink {
-        50% { opacity: 0; }
-    }
-    
-    .choice-popup {
-        position: absolute;
-        bottom: 167px;
-        right: 12px;
-        width: 180px;
-        background: var(--panel);
-        border: 1px solid var(--border);
-        display: none;
-        flex-direction: column;
-        z-index: 70;
-    }
-    .choice-popup.show {
-        display: flex;
-    }
-    .choice-popup .btn {
-        background: transparent;
-        border: none;
-        border-bottom: 1px solid var(--border);
-        padding: 10px 12px;
-        text-align: left;
-        color: var(--muted);
-        width: 100%;
-        box-sizing: border-box;
-        border-radius: 0;
-        font-size: 14px;
-        display: none;
-    }
-    .choice-popup .btn:last-child {
-        border-bottom: none;
-    }
-    .choice-popup .btn.ghost {
-        border-top: 1px solid var(--border);
-        margin-top: -1px;
-    }
-    .choice-popup .btn:hover {
-        background: var(--highlight);
-        color: var(--accent);
-        border-color: var(--highlight);
-    }
-    .choice-popup .btn[style*="display: inline-block"] {
-        display: block !important;
-    }
-
-
-    .inventory{
-        position:absolute;
-        right: 12px;
-        top: 70px;
-        bottom: auto;
-        display:flex;
-        align-items:flex-end;
-        flex-direction: column;
-        gap:6px;
-        z-index:70;
-    }
-    .inv-panel{
-        margin-left:0;
-        display:flex;
-        flex-direction: column;
-        gap:4px;
-        padding:4px;
-        border-radius:0;
-        background:var(--panel);
-        border:1px solid var(--border);
-        max-height: 212px;
-        overflow-y: auto;
-    }
-    .inv-slot{
-        width:48px;
-        height:48px;
-        border-radius:0;
-        border:1px solid var(--border);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        background:var(--panel-2);
-        cursor:pointer;
-        position:relative;
-    }
-    .inv-slot img{max-width:36px;max-height:36px}
-    .inv-slot.selected{outline:2px solid var(--highlight);outline-offset:-1px;}
-
-    .admin-mode{display:none;width:100%;max-width:100%;padding:12px;background:var(--bg);border-radius:0;max-height:100vh;overflow:auto}
-    .admin-grid{
-        display:grid;
-        grid-template-columns:320px 1fr 320px;
-        gap:12px;
-        width:100%;
-        height: 88vh; /* Fixed height */
-        min-height: 600px;
-    }
-    
-    .admin-panel-container-left {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    
-    .admin-panel-container-right { 
-        display: flex; 
-        flex-direction: column; 
-        height: 100%;
-    }
-    
-    .admin-panel{
-        background:var(--panel);
-        padding:10px;
-        border-radius:0;
-        border:1px solid var(--border);
-        height:100%;
-        min-height:400px;
-        display:flex;
-        flex-direction:column; 
-        box-sizing: border-box;
-    }
-    
-    .admin-panel-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 8px;
-    }
-    .admin-panel-header h2 {
-        margin: 0;
-        padding-bottom: 6px;
-        border-bottom: none;
-        color:var(--accent);
-        font-size:18px;
-    }
-    .admin-panel-header .header-buttons {
-        padding-bottom: 6px;
-    }
-
-    .admin-panel h2{
-        margin:0 0 8px 0;
-        color:var(--accent);
-        font-size:18px;
-        border-bottom:1px solid var(--border);
-        padding-bottom:6px;
-    }
-    .admin-panel h3{
-        font-size:16px;
-        color:var(--accent); 
-        margin:0 0 6px 0;
-    } 
-    
-    .admin-panel-content{
-        flex-grow:1;
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-        overflow-y: auto; /* Content (form + list) scrolls */
-        padding-right: 5px;
-    }
-    .admin-panel-list{
-        margin-top:8px;
-        flex-shrink: 0; /* List takes its natural height */
-    }
-
-    /* Hotspot list is special case, it fills remaining space */
-    #hotspot-list-container.admin-panel-list {
-         flex-grow: 1;
-         min-height: 0;
-         overflow-y: auto;
-         flex-shrink: 1;
-    }
-    
-    /* Config tab content also scrolls */
-    .tab-content[data-tab-content="config"] .admin-panel-content {
-        overflow-y: auto;
-    }
-
-
-    .form-button-group {
-        display: flex;
-        gap: 8px;
-        margin-top: 12px;
-        flex-wrap: wrap;
-        justify-content: flex-end; /* Align buttons to the right */
-    }
-    
-    .panel-button-bar {
-        flex-shrink: 0;
-        margin-bottom: 8px;
-        text-align: right;
-    }
-
-    .drag-handle { margin-right: 8px; color: #777; cursor: move; }
-
-    .admin-panel-list-item{
-        padding: 6px; /* Adjusted padding */
-        border-bottom:1px solid var(--panel-2);
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        font-size:14px;
-    }
-    
-    .admin-panel-list-item .item-label {
-        flex-grow: 1;
-        margin-left: 4px;
-        cursor: pointer;
-        line-height: 1.4; /* Added line-height */
-    }
-    .item-id-code { /* New class for the code tag */
-        font-size: 12px;
-        color: var(--muted);
-    }
-    
-    .admin-panel-list-item .item-buttons {
-        flex-shrink: 0;
-        display: flex;
-        gap: 6px;
-    }
-    
-    .form-group{margin-bottom:8px}
-    .form-group label{display:block;margin-bottom:4px;color:var(--muted);font-size:14px;}
-    .form-group input,.form-group textarea,.form-group select{
-        width:100%;
-        box-sizing:border-box;
-        background:var(--panel-2);
-        border:1px solid var(--border);
-        padding:6px;
-        border-radius:0;
-        color:var(--accent);
-        font-size:14px;
-        font-family: inherit;
-    }
-    .form-group input:focus,.form-group textarea:focus,.form-group select:focus {border-color: var(--highlight); outline: none;}
-    .form-group input[type="range"] { padding: 0; }
-    
-    .form-group.sub-group { display: none; margin-left: 10px; border-left: 2px solid #555; padding-left: 10px; }
-    .form-group.sub-group.show { display: block; }
-
-    
-    #hotspot-editor-preview{
-        position:relative;
-        width:100%;
-        max-width: var(--width); 
-        aspect-ratio: 960 / 600; 
-        background:#111 center/cover;
-        border-radius:0;
-        border:1px solid var(--border);
-        margin: 0 auto;
-    }
-    .editor-hotspot{position:absolute;border:1px dashed var(--accent);background:rgba(240, 240, 240, 0.1);box-sizing:border-box}
-    .editor-hotspot.selected{outline:2px solid var(--editor-select);outline-offset:-2px;}
-
-    .handle{position:absolute;width:8px;height:8px;border-radius:0;background:var(--editor-select);border:1px solid #000;box-sizing:border-box}
-    .handle.br{right:-4px;bottom:-4px;cursor:se-resize}
-    
-    .admin-main {
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto; /* Make this whole column scroll */
-    }
-
-    #hotspot-form-container.admin-panel {
-        height: auto; /* Override height: 100% */
-        min-height: 0; /* Override min-height: 400px */
-        max-height: 70vh; /* Set a max height relative to viewport */
-        overflow-y: auto; /* Make the panel scroll if content overflows */
-        flex-shrink: 0; /* Prevent shrinking in flex context */
-    }
-
-    .login-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:200}
-    .login-modal-content{
-        background:var(--panel);
-        padding:15px;
-        border-radius:0;
-        width:300px;
-        border:1px solid var(--border);
-        color:var(--accent);
-    }
-
-    .hud{
-        position:absolute;
-        left:12px;
-        top:12px;
-        padding:4px 8px;
-        background:var(--panel);
-        border-radius:0;
-        border:1px solid var(--border);
-        font-size:14px;
-        z-index:75;
-    }
-
-    .game-mode { display: none; }
-    .admin-mode { display: none; }
-    
-    .player-view-container {
-        display: none;
-        flex-direction: column;
-        width: min(100%, var(--width));
-    }
-    body[data-mode="player"] .player-view-container {
-        display: flex;
-    }
-    body[data-mode="player"] .game-mode{
-        display:block;
-        width: 100%;
-    }
-    body[data-mode="admin"] .admin-mode{display:block;padding:12px;}
-
-    @media(max-width:1200px){.admin-grid{grid-template-columns:1fr}}
-    
-    
-    /* Tab Styles for Admin Panels */
-    .tab-headers {
-        display: flex;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 10px;
-        flex-shrink: 0;
-    }
-    .tab-btn {
-        background: transparent;
-        border: none;
-        padding: 8px 14px;
-        cursor: pointer;
-        color: var(--muted);
-        font-size: 15px;
-        border-bottom: 2px solid transparent;
-        margin-bottom: -1px;
-    }
-    .tab-btn.active {
-        color: var(--accent);
-        border-bottom-color: var(--highlight);
-        font-weight: bold;
-    }
-    .tab-btn:hover:not(.active) {
-        color: var(--accent);
-        border-bottom-color: var(--panel-2);
-    }
-    .tab-content-wrapper {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-        overflow: hidden;
-    }
-    .tab-content {
-        display: none;
-        flex-grow: 1;
-        flex-direction: column;
-        min-height: 0;
-    }
-    .tab-content.active {
-        display: flex;
-    }
-    
-    .tab-content .admin-panel-content {
-         flex-grow: 1;
-         display: flex;
-         flex-direction: column;
-         min-height: 0;
-    }
-    
-    /* Select Mode Toggle */
-    .admin-panel-list-item .item-select-cb {
-        display: none;
-        margin-right: 8px;
-        vertical-align: middle;
-    }
-    .admin-panel-list.select-mode .item-select-cb {
-        display: inline-block;
-    }
-    #hotspot-list-container.select-mode .item-select-cb {
-        display: inline-block;
-    }
-
-
-    #bgm-controls {
-        z-index: 100; 
-        display: none;
-        margin-bottom: 10px;
-    }
-    
-    body[data-mode="player"] #bgm-controls {
-        display: none;
-    }
-
-    @media (min-width: 961px) {
-        body[data-mode="player"] #bgm-controls {
-            display: block;
-        }
-    }
-    
-    .hud-hp-container {
-        position:absolute; 
-        top:12px; 
-        right:12px; 
-        z-index: 75; 
-        width: 150px; 
-        background: var(--panel); 
-        border: 1px solid var(--border); 
-        padding: 4px; 
-        font-size: 14px;
-        color: var(--accent);
-    }
-    .hp-bar-outer {
-        background: #111; 
-        border: 1px solid var(--border); 
-        height: 10px; 
-        padding: 1px;
-    }
-    #hp-bar-inner {
-        background: var(--danger); 
-        height: 100%; 
-        width: 100%; 
-        transition: width 0.3s ease;
-    }
-    
-    #item-info-healing-details {
-        font-size: 14px; 
-        color: var(--muted); 
-        margin-bottom: 15px; 
-        display: none;
-    }
-    
-    ::-webkit-scrollbar {
-      display: none;
-    }
-    body, .admin-panel-list, .admin-mode, .inv-panel, .admin-panel-content, .admin-main {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .admin-mode {
-        overflow: auto;
-    }
-    .admin-panel-list {
-        overflow-y: auto;
-    }
-    .admin-panel-content {
-        overflow-y: auto;
-    }
-    .admin-main {
-        overflow-y: auto;
-    }
-    
-    /* Re-enable scroll on hotspot list */
-    #hotspot-list-container.admin-panel-list {
-        overflow-y: auto;
-    }
-</style>
+  <title>forever with you</title>
 </head>
 <body data-mode="">
   
@@ -656,8 +20,11 @@
         <div class="scene-bg" id="sceneBg"></div>
         <div id="hotspotLayer" style="position:absolute;inset:0;z-index:40;"></div>
 
+        <div id="inspectScreenImageContainer"></div>
         <div class="popup" id="inspectPopup" role="dialog" aria-modal="true">
           <div class="popup-text-container">
+              
+              <button id="btnSkipTyping" class="btn btn-sm ghost" style="position: absolute; bottom: 3px; right: 35px; z-index: 10;">Skip</button>
               <div id="popupHeader">
                   <span id="popupHotspotLabel"></span>
               </div>
@@ -991,9 +358,16 @@
         const snap = await getDoc(doc(db,'game','master')); 
         if(snap.exists()){ 
             const remote = snap.data();
-            Object.assign(gameData.scenes, remote.scenes || {});
-            Object.assign(gameData.items, remote.items || {});
-            Object.assign(gameData.hotspots, remote.hotspots || {});
+
+            if (remote.scenes) {
+                gameData.scenes = remote.scenes;
+            }
+            if (remote.items) {
+                gameData.items = remote.items;
+            }
+            if (remote.hotspots) {
+                gameData.hotspots = remote.hotspots;
+            }
             Object.assign(gameData.config, remote.config || {});
             
             
@@ -1147,18 +521,22 @@
   const popupContinueEl = document.getElementById('popupContinue');
   const choicePopup = document.getElementById('choicePopup');
   const btnMoveFromSuccess = document.getElementById('btnMoveFromSuccess');
+  const btnSkipTyping = document.getElementById('btnSkipTyping');
 
   let adminSelectedSceneId = null;
   let adminSelectedHotspotId = null;
   let currentHotspot = null;
   let notifyResolve = null;
   let isIntroPlaying = false;
-  
+  let isInspectActionPending = false;
+  let isMoveActionPending = false;
+  let isHpActionPending = false;
+  let pendingHpCost = 0;
   let tempHotspotData = null;
-  
   let typewritingTimer = null;
   let currentTextPages = [];
   let currentPageIndex = 0;
+  let pendingItemToGive = null;
 
   
   function playSound(url) {
@@ -1324,11 +702,48 @@
       }
   }
   
-  function checkContinue() {
+  async function checkContinue() {
       if (currentPageIndex < currentTextPages.length - 1) {
           popupContinueEl.style.display = 'block';
       } else {
           popupContinueEl.style.display = 'none';
+          
+          if (pendingItemToGive) {
+              giveItemToPlayer(pendingItemToGive);
+              pendingItemToGive = null;
+          }
+
+          if (isInspectActionPending) {
+              btnInspect.style.display = 'inline-block';
+              updateChoicePopupVisibility(); 
+              isInspectActionPending = false; 
+          }
+          
+          if (isMoveActionPending) {
+              btnMoveFromSuccess.style.display = 'inline-block';
+              updateChoicePopupVisibility(); 
+              isMoveActionPending = false; 
+          }
+          
+          if (isHpActionPending) {
+              isHpActionPending = false;
+              
+              if (currentHotspot) {
+                 playerState.inspectedHotspots[currentHotspot.id] = true; 
+              }
+              playerState.hp -= pendingHpCost;
+              if (playerState.hp < 0) playerState.hp = 0;
+              updateHpUI();
+              
+              await showNotify(`HP가 ${pendingHpCost}만큼 감소했습니다.\n(현재 HP: ${playerState.hp} / ${gameData.config?.startingHp || 100})`, '체력 감소');
+              
+              if (playerState.hp === 0) {
+                  closePopup();
+                  handleGameOver();
+                  return; 
+              }
+              pendingHpCost = 0;
+          }
       }
   }
 
@@ -1390,6 +805,7 @@
 
     btnInspect.addEventListener('click', () => onInspectClickLogic()); 
     btnUseItem.addEventListener('click', onUseItemClick); 
+    btnSkipTyping.addEventListener('click', onSkipAllAndClose);
     
     popupText.addEventListener('click', skipTyping);
     popupContinueEl.addEventListener('click', showNextPage);
@@ -2109,6 +1525,7 @@
     
     const area = tempHotspotData.area;
 
+    tempHotspotData.id = id;
     
     tempHotspotData.label = hotspotLabel.value;
     tempHotspotData.sceneId = adminSelectedSceneId;
@@ -2293,10 +1710,14 @@
   
   function onHotspotClick(hs){ 
     if (isIntroPlaying) return;
+    if (document.getElementById('inspectPopup').classList.contains('show')) return;
+    pendingItemToGive = null;
     currentHotspot = hs; 
+    isInspectActionPending = false; 
+
     popupTitle.textContent = hs.label||'조사'; 
     popupHotspotLabelEl.textContent = hs.label || '';
-    
+   
     const ins = hs.inspect || {};
     const hpCost = ins.hpCost || 0;
     const gives = ins.givesItem; 
@@ -2307,15 +1728,17 @@
     const hasBeenHPDrained = !!playerState.inspectedHotspots[hs.id];
     
     
-    const oldImg = document.getElementById('popupImg'); 
-    if(oldImg) oldImg.remove();
+    const screenImgContainer = document.getElementById('inspectScreenImageContainer');
+    screenImgContainer.innerHTML = '';
     
     const imgSrc = ins.inspectImgUrl;
     if (imgSrc) { 
-        const img = document.createElement('img'); 
-        img.id = 'popupImg'; 
-        img.src = imgSrc; 
-        inspectPopup.insertBefore(img, inspectPopup.firstChild);
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        screenImgContainer.appendChild(img);
+        screenImgContainer.style.display = 'block';
+    } else {
+        screenImgContainer.style.display = 'none';
     }
     
     
@@ -2329,7 +1752,7 @@
     if(isUnlocked) {
         
         if (onSuccess) { 
-             btnMoveFromSuccess.style.display = 'inline-block';
+             isMoveActionPending = true;
              btnMoveFromSuccess.textContent = '이동';
             
              btnMoveFromSuccess.onclick = ()=>{
@@ -2342,25 +1765,25 @@
         } else {
         }
         
-        mainText = ins.alreadyInspectedText || ins.successText || '더 이상 특별한 것은 없다.';
+        mainText = ins.alreadyInspectedText || ins.text || '더 이상 특별한 것은 없다.';
 
     } else if(requires){
         
         isLocked = true;
-        /* ==================================================================
-          [수정됨] 
-          1번 항목 수정:
-          '주변을 둘러보자...' 텍스트가 [페이지] 구문으로 분리되지 않고
-          기존 텍스트에 \n\n (줄바꿈)으로 이어지도록 수정했습니다.
-          이렇게 하면 paginateText 함수가 페이지를 분리하지 않고 한 페이지에 표시합니다.
-          ==================================================================
-        */
-        mainText += '\n\n주변을 둘러보자. 도움이 될 만한 게 있을지도 모른다.';
+        const hintText = '주변을 둘러보자. 도움이 될 만한 게 있을지도 모른다.';
+        
+        const usesPagination = /\[([^\]]+)\]/g.test(mainText);
+
+        if (usesPagination) {
+            mainText += `[${hintText}]`;
+        } else {
+            mainText = `[${mainText}][${hintText}]`;
+        }
     } else if(gives || onSuccess || (hpCost > 0 && !hasBeenHPDrained)) {
         
-        btnInspect.style.display = 'inline-block';
+        isInspectActionPending = true; 
         btnInspect.textContent = '조사'; 
-        mainText = ins.text||'새로운 것을 찾은 것 같다. 조사해보자.'; 
+        mainText = ins.text||'새로운 것을 찾은 것 같다. 조사해보자.';
     } else {
     }
 
@@ -2369,16 +1792,18 @@
 
     if(isLocked && playerState.selectedItem){
         if (playerState.selectedItem === requires) {
-            
-            btnUseItem.style.display = 'inline-block';
-            btnUseItem.textContent = '아이템 사용';
-            mainText = `[${itemName}](을)를 사용할 수 있다.`;
-            btnInspect.style.display = 'none'; 
-        } else {
-            
-            mainText = `[${itemName}](을)를 사용할 수 없다.`;
-            btnUseItem.style.display = 'none';
-            btnInspect.style.display = 'none';
+                
+                btnUseItem.style.display = 'inline-block';
+                btnUseItem.textContent = '아이템 사용';
+                mainText = `[${itemName}(을)를 사용할 수 있다.]`;
+                btnInspect.style.display = 'none'; 
+                isInspectActionPending = false; 
+            } else {
+                
+                mainText = `[${itemName}(을)를 사용할 수 없다.]`;
+                btnUseItem.style.display = 'none';
+                btnInspect.style.display = 'none';
+                isInspectActionPending = false; 
         }
     }
 
@@ -2387,17 +1812,31 @@
     paginateText(mainText);
 
     document.getElementById('inspectPopup').classList.add('show'); 
+    btnSkipTyping.style.display = 'block';
     
     updateChoicePopupVisibility();
+  }
+
+  function onSkipAllAndClose() {
+    stopTypewriter();
+    closePopup();
   }
 
   function closePopup(){ 
     document.getElementById('inspectPopup').classList.remove('show'); 
     choicePopup.classList.remove('show');
-    currentHotspot=null; 
+    currentHotspot=null;
+    isIntroPlaying = false;
+    isInspectActionPending = false;
+    isMoveActionPending = false;
+    isHpActionPending = false;
+    pendingHpCost = 0;
+    pendingItemToGive = null;
+    btnSkipTyping.style.display = 'none';
     
-    const oldImg = document.getElementById('popupImg'); 
-    if(oldImg) oldImg.remove();
+    const screenImgContainer = document.getElementById('inspectScreenImageContainer');
+    screenImgContainer.style.display = 'none';
+    screenImgContainer.innerHTML = '';
     
     stopTypewriter();
     popupContinueEl.style.display = 'none';
@@ -2417,36 +1856,13 @@
     const hpCost = ins.hpCost || 0;
     const hasBeenHPDrained = !!playerState.inspectedHotspots[hs.id];
     
-    
-    if (hpCost > 0 && !hasBeenHPDrained) {
-        playerState.inspectedHotspots[hs.id] = true; 
-        
-        if (ins.hpCostText) {
-            await showNotify(ins.hpCostText, '알림');
-        }
-        
-        playerState.hp -= hpCost;
-        if (playerState.hp < 0) playerState.hp = 0;
-        
-        updateHpUI();
-        
-        await showNotify(`HP가 ${hpCost}만큼 감소했습니다.\n(현재 HP: ${playerState.hp} / ${gameData.config?.startingHp || 100})`, '체력 감소');
-        
-        if (playerState.hp === 0) {
-            closePopup();
-            handleGameOver();
-            return; 
-        }
-    }
-    
-    
     const gives = ins.givesItem; 
     const onSuccess = ins.onSuccessScene;
     
     
     if(!playerState.unlockedHotspots[hs.id]){ 
         if(gives){
-            giveItemToPlayer(gives); 
+            pendingItemToGive = gives;
         }
         
         
@@ -2461,23 +1877,56 @@
     }
     
     
-    let successMessage = ins.successText||'';
-    if (gives && !successMessage) {
-         successMessage = `${gameData.items[gives]?.name || gives}(을)를 발견했다.`;
+    let successMessage = ins.successText || '';
+    const defaultGiveMessage = `${gameData.items[gives]?.name || gives}(을)를 챙겼다.`;
+
+    if (gives) {
+        if (!successMessage) {
+            successMessage = `[${defaultGiveMessage}]`;
+        } else {
+            const usesPagination = /\[([^\]]+)\]/g.test(successMessage);
+            
+            if (usesPagination) {
+                successMessage += `[${defaultGiveMessage}]`;
+            } else {
+                successMessage = `[${successMessage}][${defaultGiveMessage}]`;
+            }
+        }
     } else if (!successMessage) {
-        successMessage = (hpCost > 0) ? '더 이상 특별한 것은 없다.' : '문제가 해결되었다.';
+        successMessage = (hpCost > 0) ? '[더 이상 특별한 것은 없다.]' : '[문제가 해결되었다.]';
+    } else {
+        const usesPagination = /\[([^\]]+)\]/g.test(successMessage);
+        if (!usesPagination) {
+            successMessage = `[${successMessage}]`;
+        }
+    }
+
+    if (hpCost > 0 && !hasBeenHPDrained && ins.hpCostText) {
+        const usesPagination = /\[([^\]]+)\]/g.test(successMessage);
+        
+        if (successMessage.trim() === '') {
+            successMessage = `[${ins.hpCostText}]`;
+        } else if (usesPagination) {
+            successMessage += `[${ins.hpCostText}]`;
+        } else {
+            successMessage = `[${successMessage}][${ins.hpCostText}]`;
+        }
     }
     
     stopTypewriter();
-    paginateText(successMessage); 
+    paginateText(successMessage);
 
+    if (hpCost > 0 && !hasBeenHPDrained) {
+    isHpActionPending = true;
+    pendingHpCost = hpCost;
+    }
     
     btnInspect.style.display = 'none'; 
     btnUseItem.style.display='none'; 
 
     if(onSuccess){
         
-        btnMoveFromSuccess.style.display = 'inline-block';
+        isMoveActionPending = true;
         btnMoveFromSuccess.textContent = '이동';
         
         btnMoveFromSuccess.onclick = ()=>{
@@ -2493,31 +1942,37 @@
   }
 
   
-  function onUseItemClick(){ 
+  async function onUseItemClick(){ 
     if(!currentHotspot || !playerState.selectedItem) return; 
+    
     const hs = currentHotspot;
     const ins=hs.inspect||{}; 
     const required = ins.requiresItem; 
     
     if(required && required===playerState.selectedItem){ 
       
+      const hpCost = ins.hpCost || 0;
+      const hasBeenHPDrained = !!playerState.inspectedHotspots[hs.id];
+      
       const itemDef = gameData.items[playerState.selectedItem];
       const itemName = itemDef ? itemDef.name : playerState.selectedItem;
-      const defaultSuccessText = `[${itemName}](을)를 사용했다.`;
-      let successText = ins.successText || defaultSuccessText; 
+      
+      let successMessage = ins.successText || `[${itemName}(을)를 사용했다.]`;
       
       playerState.unlockedHotspots[hs.id]=true; 
       
       const givesOnUse = ins.givesItemOnUse;
       if (givesOnUse) {
-          giveItemToPlayer(givesOnUse);
-          successText += ` (${gameData.items[givesOnUse]?.name || givesOnUse} 획득)`;
+          giveItemToPlayer(givesOnUse); 
+          const giveMessage = `${gameData.items[givesOnUse]?.name || givesOnUse}(을)를 획득했다.`;
+          
+          const usesPagination = /\[([^\]]+)\]/g.test(successMessage);
+          if (usesPagination) {
+              successMessage += `[${giveMessage}]`;
+          } else {
+              successMessage = `[${successMessage}][${giveMessage}]`;
+          }
       }
-      
-      stopTypewriter();
-      paginateText(successText);
-      
-      playerState.selectedItem=null; 
       
       const consumes = ins.consumesItem === false ? false : true;
       if (consumes) {
@@ -2528,20 +1983,47 @@
               }
           }
       }
+      
+      playerState.selectedItem=null; 
 
       saveLocalPlayerState(); 
       savePlayerToFirestore(); 
       renderInventory(); 
       
+      if (hpCost > 0 && !hasBeenHPDrained && ins.hpCostText) {
+          const usesPagination = /\[([^\]]+)\]/g.test(successMessage);
+          
+          if (successMessage.trim() === '') {
+              successMessage = `[${ins.hpCostText}]`;
+          } else if (usesPagination) {
+              successMessage += `[${ins.hpCostText}]`;
+          } else {
+              successMessage = `[${successMessage}][${ins.hpCostText}]`;
+          }
+      }
+
+      stopTypewriter();
+      
+      const usesPagination = /\[([^\]]+)\]/g.test(successMessage);
+      if (usesPagination) {
+          paginateText(successMessage);
+      } else {
+          paginateText(`[${successMessage}]`);
+      }
+      
+      if (hpCost > 0 && !hasBeenHPDrained) {
+      isHpActionPending = true;
+      pendingHpCost = hpCost;
+      }
+
       btnInspect.style.display = 'none';
       btnUseItem.style.display = 'none';
       
       if(ins.onSuccessScene){ 
-        btnMoveFromSuccess.style.display = 'inline-block';
+        isMoveActionPending = true;
         btnMoveFromSuccess.textContent = '이동';
         
         btnMoveFromSuccess.onclick = ()=>{
-            playerState.selectedItem=null; 
             closePopup();
             loadScene(ins.onSuccessScene); 
             saveLocalPlayerState(); 
@@ -2552,6 +2034,7 @@
       } 
       
       updateChoicePopupVisibility();
+
     } else { 
       const itemDef = gameData.items[playerState.selectedItem];
       const itemName = itemDef ? itemDef.name : playerState.selectedItem;
@@ -2559,7 +2042,7 @@
       stopTypewriter();
       paginateText(`[${itemName}](이)가 여기에 작동하지 않는다.`);
       updateChoicePopupVisibility();
-    } 
+    }
   }
 
   function renderInventory(){ 
@@ -2784,6 +2267,22 @@
         return; 
     }
     
+    if (typewritingTimer) {
+        return;
+    }
+    
+    if (popupContinueEl.style.display === 'block') {
+        return;
+    }
+    
+    if (choicePopup.classList.contains('show')) {
+        return;
+    }
+
+    if (isHpActionPending) {
+        return;
+    }
+    
     
     closePopup(); 
   });
@@ -2824,6 +2323,7 @@
       if (isSelectMode) {
           await onDeleteSelectedItemsClick();
       } else {
+          
           list.classList.add('select-mode');
           btn.textContent = 'Delete Selected';
       }
@@ -2878,9 +2378,6 @@
               sceneList.classList.remove('select-mode');
               btnToggleSceneSelect.textContent = 'Select';
           }
-      } else {
-          sceneList.classList.remove('select-mode');
-          btnToggleSceneSelect.textContent = 'Select';
       }
       
   }
@@ -2924,9 +2421,6 @@
           
           hotspotListContainer.classList.remove('select-mode');
           btnToggleHotspotSelect.textContent = 'Select';
-      } else {
-          hotspotListContainer.classList.remove('select-mode');
-          btnToggleHotspotSelect.textContent = 'Select';
       }
       
   }
@@ -2959,9 +2453,6 @@
           await showNotify(`${selectedIds.length}개의 아이템을 삭제했습니다.`, '삭제 완료');
           
           
-          itemList.classList.remove('select-mode');
-          btnToggleItemSelect.textContent = 'Select';
-      } else {
           itemList.classList.remove('select-mode');
           btnToggleItemSelect.textContent = 'Select';
       }
