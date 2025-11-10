@@ -1,4 +1,4 @@
-<style>
+
     :root{
       --width:960px; --height:600px;
       --bg: #000000;
@@ -650,4 +650,3 @@
     #hotspot-list-container.admin-panel-list {
         overflow-y: auto;
     }
-</style>
